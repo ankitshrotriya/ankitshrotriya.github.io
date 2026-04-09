@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>स्मारिका Flipbook</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+body {
+
+margin:0;
+background:#dfe9f3;
+
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+
+}
+
+/* Flipbook */
+
+#flipbook {
+
+width:90%;
+max-width:900px;
+
+height:80vh;
+
+}
+
+#flipbook canvas {
+
+width:100%;
+height:100%;
+
+border:6px solid #6b4f2a;
+
+box-shadow:0 0 20px rgba(0,0,0,0.3);
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header class="header">
+
+<!-- same header as index -->
+
+</header>
+
+<div id="flipbook"></div>
+
+<script src="flipbook/jquery.min.js"></script>
+<script src="flipbook/turn.min.js"></script>
+<script src="flipbook/pdf.js"></script>
+
+<script>
+
+var url = "books/smarika.pdf";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+"flipbook/pdf.worker.js";
+
+var pdfDoc = null;
+
+pdfjsLib.getDocument(url).promise.then(function(pdf){
+
+pdfDoc = pdf;
+
+for (let page = 1; page <= pdf.numPages; page++) {
+
+let canvas = document.createElement("canvas");
+
+document.getElementById("flipbook")
+.appendChild(canvas);
+
+renderPage(page, canvas);
+
+}
+
+$('#flipbook').turn({
+width:900,
+height:600,
+autoCenter:true
+});
+
+});
+
+function renderPage(num, canvas) {
+
+pdfDoc.getPage(num).then(function(page){
+
+var viewport =
+page.getViewport({ scale: 1.5 });
+
+canvas.height = viewport.height;
+
+canvas.width = viewport.width;
+
+var context = canvas.getContext('2d');
+
+page.render({
+canvasContext: context,
+viewport: viewport
+});
+
+});
+
+}
+
+</script>
+
+</body>
+
+</html>

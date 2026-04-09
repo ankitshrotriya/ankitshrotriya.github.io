@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>प्रयास पुस्तक</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+/* ===== BOOK AREA ===== */
+
+.book-section {
+
+display: flex;
+
+flex-direction: column;
+
+align-items: center;
+
+margin-top: 20px;
+
+}
+
+/* Book frame */
+
+.book-container {
+
+width: 90%;
+
+max-width: 900px;
+
+background: white;
+
+padding: 15px;
+
+border-radius: 12px;
+
+/* Book look */
+
+border: 8px solid #6b4f2a;
+
+box-shadow: 0 0 20px rgba(0,0,0,0.25);
+
+}
+
+/* PDF */
+
+.book-container iframe {
+
+width: 100%;
+
+height: 80vh;
+
+border: none;
+
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+.book-container {
+
+height: 85vh; 
+
+
+
+border-width: 5px;
+
+}
+
+.book-container iframe {
+
+height: 75vh;
+
+}
+
+/* Mobile open button */
+
+.mobile-open-btn {
+
+display: block;
+
+margin-top: 10px;
+
+padding: 12px;
+
+text-align: center;
+
+background: #ff7a00;
+
+color: white;
+
+font-weight: bold;
+
+border-radius: 8px;
+
+text-decoration: none;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- ===== SAME HEADER ===== -->
+
+<div class="top-bar">
+
+<div class="top-left">
+📧 mpvmtks.1982@gmail.com
+</div>
+
+<div class="top-right">
+📞 +91 7067788762
+</div>
+
+</div>
+
+<header class="header">
+
+<div class="logo-area">
+
+<img src="images/logo.png">
+
+<div>
+
+<h2>म.प्र.वि.मं. तकनीकी कर्मचारी संघ</h2>
+
+<p>श्रमेव जयते</p>
+
+</div>
+
+</div>
+
+<nav>
+
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="gallery.html">Gallery</a>
+<a href="contact.html">Contact</a>
+
+<div class="dropdown">
+
+<a href="#">साहित्य ▾</a>
+
+<div class="dropdown-content">
+
+<a href="prayash-viewer.html">
+प्रयास
+</a>
+
+<a href="smarika-viewer.html">
+स्मारिका
+</a>
+
+</div>
+
+</div>
+
+<a href="registration.html" class="register-btn">
+Registration
+</a>
+
+<a href="donation.html" class="donation-btn">
+Donation
+</a>
+
+</nav>
+
+</header>
+
+<!-- ===== BOOK AREA ===== -->
+
+<section class="book-section">
+
+<div class="book-container">
+
+<iframe 
+id="pdfViewer"
+src="books/प्रयास.pdf#toolbar=0&navpanes=0&view=FitH&page=1"
+style="width:100%; height:80vh;">
+</iframe>
+
+<!-- MOBILE OPEN BUTTON -->
+
+<a href="books/प्रयास.pdf"
+target="_blank"
+class="mobile-open-btn">
+
+📖 पुस्तक खोलें
+
+</a>
+
+</div>
+
+</section>
+
+<script>
+
+let page = 1;
+
+let totalPages = 43; // प्रयास pages
+
+const pdfViewer = document.getElementById("pdfViewer");
+
+function updatePDF() {
+
+pdfViewer.src =
+"books/प्रयास.pdf#toolbar=0&navpanes=0&page=" + page;
+
+}
+
+function nextPage(){
+
+if(page < totalPages){
+
+page++;
+
+updatePDF();
+
+}
+
+}
+
+function prevPage(){
+
+if(page > 1){
+
+page--;
+
+updatePDF();
+
+}
+
+}
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,1790 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+
+  background: linear-gradient(
+      to bottom,
+      #eef3f9,
+      #ffffff
+  );
+  
+}
+
+/* Mobile Open Button */
+
+.mobile-open-btn {
+
+display: none;
+
+margin-top: 10px;
+
+padding: 12px;
+
+text-align: center;
+
+background: #ff7a00;
+
+color: white;
+
+font-weight: bold;
+
+border-radius: 8px;
+
+text-decoration: none;
+
+}
+
+/* Only Mobile */
+
+@media(max-width:768px){
+
+iframe {
+
+display: none;
+
+}
+
+.mobile-open-btn {
+
+display: block;
+
+}
+
+}
+
+
+/* ===== FINAL HOVER GAP FIX (MOST IMPORTANT) ===== */
+
+/* invisible bridge banayega mouse ke liye */
+
+.dropdown::after {
+
+content: "";
+
+position: absolute;
+
+top: 100%;
+
+left: 0;
+
+width: 100%;
+
+height: 15px;
+
+/* invisible bridge */
+
+background: transparent;
+
+}
+
+
+/* ===== FINAL SAFE DROPDOWN FIX ===== */
+
+nav .dropdown{
+position:relative;
+}
+
+nav .dropdown-content{
+
+display:none;
+
+position:absolute;
+
+top:100%;
+left:0;
+
+background:rgba(0,0,0,0.85);
+
+min-width:180px;
+
+border-radius:6px;
+
+z-index:99999;
+
+}
+
+/* Hover stable */
+
+nav .dropdown:hover .dropdown-content{
+display:block;
+}
+
+/* Gap remove */
+
+nav .dropdown-content a{
+display:block;
+padding:10px 14px;
+color:white;
+text-decoration:none;
+white-space:nowrap;
+}
+/* ===== STRONG DROPDOWN FIX ===== */
+
+.dropdown {
+position: relative;
+display: inline-block;
+}
+
+/* dropdown button */
+
+.dropbtn {
+cursor: pointer;
+display: inline-block;
+}
+
+/* dropdown content */
+
+.dropdown-content {
+
+display: none;
+
+position: absolute;
+
+top: 100%;   /* direct niche */
+
+left: 0;
+
+min-width: 180px;
+
+background: rgba(0,0,0,0.8);
+
+border-radius: 6px;
+
+z-index: 9999;
+
+/* IMPORTANT: gap remove */
+
+padding-top: 0;
+margin-top: 0;
+
+}
+
+/* hover open */
+
+.dropdown:hover .dropdown-content {
+
+display: block;
+
+}
+
+/* link styling */
+
+.dropdown-content a {
+
+display: block;
+
+padding: 10px 14px;
+
+color: white;
+
+text-decoration: none;
+
+}
+
+/* hover effect */
+
+.dropdown-content a:hover {
+
+background: rgba(255,255,255,0.2);
+
+}
+  
+  
+/* ===== DROPDOWN HOVER STABLE FIX ===== */
+
+nav .dropdown {
+position: relative;
+display: inline-block;
+}
+
+/* IMPORTANT: gap remove karega */
+
+nav .dropdown-content {
+
+display: none;
+
+position: absolute;
+
+top: 100%;   /* direct niche */
+left: 0;
+
+margin-top: 0;  /* gap remove */
+
+min-width: 180px;
+
+background: rgba(0,0,0,0.7);
+
+border-radius: 6px;
+
+z-index: 9999;
+
+}
+
+/* Hover stable */
+
+nav .dropdown:hover .dropdown-content {
+display: block;
+}
+
+/* Link styling */
+
+nav .dropdown-content a {
+
+display: block;
+
+padding: 10px 14px;
+
+color: white;
+
+text-decoration: none;
+
+white-space: nowrap;
+
+}
+
+/* Hover color */
+
+nav .dropdown-content a:hover {
+
+background: rgba(255,255,255,0.2);
+
+}
+  
+/* ===== NAVBAR FINAL FIX ===== */
+
+/* nav ko single line me force karega */
+
+nav {
+
+display: flex;
+align-items: center;
+justify-content: flex-end;
+gap: 14px;
+
+}
+
+/* dropdown ko same line me rakhega */
+
+nav .dropdown {
+
+display: inline-flex;
+align-items: center;
+position: relative;
+
+}
+
+/* dropdown box proper niche aaye */
+
+nav .dropdown-content {
+
+display: none;
+
+position: absolute;
+
+top: 100%;
+left: 0;
+
+min-width: 180px;
+
+background: rgba(0,0,0,0.6);
+
+backdrop-filter: blur(6px);
+
+border-radius: 6px;
+
+z-index: 9999;
+
+}
+
+/* hover show */
+
+nav .dropdown:hover .dropdown-content {
+
+display: block;
+
+}
+
+/* buttons ko move hone se roke */
+
+.register-btn,
+.donation-btn {
+
+white-space: nowrap;
+
+}
+  
+/* ===== UNION BOOK DROPDOWN FIX (NEW CSS ONLY) ===== */
+
+/* dropdown ko alag spacing dena */
+
+nav .dropdown {
+position: relative;
+margin-left: 10px;
+}
+
+/* dropdown box proper niche aaye */
+
+nav .dropdown-content {
+
+display: none;
+
+position: absolute;
+
+top: 38px;   /* niche show hoga */
+left: 0;
+
+min-width: 180px;
+
+background: rgba(0,0,0,0.6);
+
+backdrop-filter: blur(6px);
+
+border-radius: 6px;
+
+z-index: 9999;
+
+}
+
+/* hover par show */
+
+nav .dropdown:hover .dropdown-content {
+display: block;
+}
+
+/* overlap stop karne ke liye spacing */
+
+nav a,
+nav .dropdown {
+margin-right: 8px;
+}
+
+/* ===== MOBILE FIX ===== */
+
+@media(max-width:768px){
+
+nav {
+flex-wrap: wrap;
+}
+
+/* mobile me dropdown click se open */
+
+nav .dropdown:active .dropdown-content {
+display: block;
+}
+
+}
+  
+  
+/* Dropdown container */
+
+.dropdown-content {
+display: none;
+position: absolute;
+
+background: rgba(255,255,255,0.1); /* transparent */
+backdrop-filter: blur(6px);
+
+min-width: 180px;
+
+border-radius: 6px;
+
+box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+}
+
+.dropdown-content a {
+color: white;
+padding: 10px 14px;
+display: block;
+text-decoration: none;
+}
+
+.dropdown-content a:hover {
+background: rgba(255,255,255,0.2);
+}
+/* Show on hover */
+
+.dropdown:hover .dropdown-content {
+display: block;
+}
+
+}
+
+.video-slider {
+    position: relative;
+    overflow: hidden;
+    padding: 20px 40px;
+}
+
+.video-track {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.video-item {
+    min-width: 300px;
+    margin-right: 20px;
+}
+
+.video-item video {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    background: black;
+    border-radius: 10px;
+}
+
+/* Buttons */
+
+.video-prev,
+.video-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #c30000;
+    color: white;
+    border: none;
+    font-size: 24px;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.video-prev {
+    left: 5px;
+}
+
+.video-next {
+    right: 5px;
+}
+.video-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+/* Video full दिखे — crop नहीं होगा */
+.video-container video {
+    width: 100%;
+    height: 220px;          /* same height */
+    object-fit: contain;    /* पूरा video दिखेगा */
+    background: black;      /* side में black आएगा */
+    border-radius: 10px;
+}
+
+/* About Section Highlight Box */
+
+.about {
+    background: #c30000;        /* light background */
+    padding: 40px 20px;
+    text-align: center;
+}
+
+/* Heading style */
+.about-title {
+    color: #c30000;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* Red underline */
+
+
+/* Paragraph highlight box */
+.about p {
+    max-width: 900px;
+    margin: auto;
+    background: #ffffff;
+    padding: 20px 25px;
+    border-radius: 10px;
+
+    /* highlight effect */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+    font-size: 16px;
+    line-height: 1.8;
+    text-align: justify;
+}
+
+.about-title {
+    color: #c30000;   /* red color */
+    font-weight: bold;
+}
+
+/* हमारे बारे में वाली line */
+.about .title-line {
+    width: 120px;
+    height: 4px;
+    background: #c30000;
+    margin: 8px 0 20px 0;   /* auto हटाया — left align */
+    border-radius: 2px;
+}
+.title-line {
+    width: 120px;
+    height: 4px;
+    background: #c30000;   /* same red color */
+    margin: 8px auto 20px;
+    border-radius: 2px;
+}
+
+/* प्रमुख मांगे जैसा same color */
+
+.demand-title {
+    color: #ff6600;
+    font-weight: bold;
+}
+
+/* संघ की उपलब्धियां */
+.achievement-title {
+    color: #c30000 !important;
+    font-weight: bold;
+}
+
+/* हमारी कार्य टीम */
+.team-title {
+    color: #c30000 !important;
+    font-weight: bold;
+}
+
+/* प्रमुख मांगे वाला color (same style use करें) */
+.demand-title {
+    color: #ff6600;      /* orange color */
+    font-weight: bold;
+}
+
+/* संघ की उपलब्धियां — same color */
+.achievement-title {
+    color: #c30000;      /* same as demand */
+    font-weight: bold;
+}
+
+/* हमारी कार्य टीम — same color */
+.team-title {
+    color: #c30000;      /* same as demand */
+    font-weight: bold;
+}
+
+/* ===== Video Section Same Theme ===== */
+
+.video-section {
+
+background: #d9cfc1;   /* same beige background */
+padding: 70px 40px;
+
+}
+
+.video-title {
+
+color: #c30000;   /* same red heading */
+font-size: 30px;
+font-weight: bold;
+text-align: center;
+
+}
+
+/* Orange line नीचे */
+
+.video-title::after {
+
+content:"";
+display:block;
+
+width:100%;
+height:5px;
+
+background:#ff7a00;
+
+margin-top:12px;
+
+}
+
+/* ===== Photo Gallery Same Theme ===== */
+
+.gallery {
+
+background: #d9cfc1;   /* same background */
+
+}
+
+.gallery h2 {
+
+color: #c30000;   /* red heading */
+font-size: 30px;
+font-weight: bold;
+
+}
+
+.gallery h2::after {
+
+content:"";
+display:block;
+
+width:100%;
+height:5px;
+
+background:#ff7a00;
+
+margin-top:12px;
+
+}
+
+/* ===== Activities Heading Same Color as Demand ===== */
+
+.activities {
+
+background: #d9cfc1;   /* same beige background */
+padding: 70px 40px;
+
+}
+
+.activity-title {
+
+color: #c30000;   /* red text */
+text-align: center;
+font-size: 30px;
+font-weight: bold;
+
+}
+
+.activity-title::after {
+
+content:"";
+display:block;
+
+width:100%;
+height:5px;
+
+background:#ff7a00;  /* orange line */
+
+margin-top:12px;
+
+}
+
+.gallery h2::after{
+content:"";
+display:block;
+
+width:100%;
+height:5px;
+
+background:#ff7a00;
+
+margin-top:12px;
+border-radius:2px;
+}
+
+.activity-subtitle {
+text-align: center;
+margin-bottom: 20px;
+}
+
+.orange-line {
+display: block;
+color: orange;
+font-weight: bold;
+font-size: 18px;
+margin-bottom: 5px;
+}
+
+.orange-line-hindi {
+display: block;
+color: orange;
+font-weight: bold;
+font-size: 16px;
+}
+
+/* ===== Gallery White Shadow Frame ===== */
+
+.gallery-grid img {
+
+  width: 100%;
+  height: 250px;
+
+  object-fit: cover;
+
+  border-radius: 12px;
+
+  padding: 8px;           /* ⭐ White frame */
+
+  background: white;      /* ⭐ White border look */
+
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+
+  transition: transform 0.3s ease,
+              box-shadow 0.3s ease;
+
+  cursor: pointer;
+
+}
+
+
+/* Hover Effect */
+
+.gallery-grid img:hover {
+
+  transform: scale(1.05);
+
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+
+}
+
+/* TOP BAR */
+
+.top-bar{
+background:#111;
+color:white;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:16px 40px;
+font-size:16px;
+}
+
+.activity-slider {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.top-left,
+.top-right{
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+
+/* HEADER */
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:#ff7a00;
+color:white;
+}
+
+.logo-area{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.logo-area img{
+height:65px;
+width:auto;
+background:white;
+padding:4px;
+border-radius:50%;
+}
+
+nav{
+display:flex;
+align-items:center;
+gap:20px;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+font-weight:bold;
+font-size:16px;
+}
+
+/* Buttons */
+
+.register-btn{
+background:white;
+color:#ff7a00;
+padding:8px 16px;
+border-radius:6px;
+}
+
+.register-btn:hover{
+background:#ffe5cc;
+}
+
+.donation-btn{
+background:#16a34a;
+color:white;
+padding:10px 20px;
+border-radius:8px;
+text-decoration:none;
+font-weight:bold;
+}
+
+.donation-btn:hover{
+background:#15803d;
+}
+
+
+/* SLIDER */
+
+.slider{
+width:100%;
+overflow:hidden;
+}
+
+.slides img{
+width:100%;
+height:450px;
+object-fit:cover;
+display:none;
+}
+
+.slides img:first-child{
+display:block;
+}
+
+
+/* ABOUT */
+
+.about{
+padding:60px;
+text-align:center;
+background:white;
+}
+
+.about h2{
+color:#ff7a00;
+margin-bottom:15px;
+}
+
+.achievement-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.achievement-list li {
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 10px;
+}
+
+.achievement-list li::before {
+  content: "✔";
+  position: absolute;
+  left: 0;
+  color: green;
+  font-weight: bold;
+}
+
+/* ===== Achievement Section ===== */
+
+/* ===== Achievement Section Orange Theme ===== */
+
+.achievement-section{
+
+  padding:70px 40px;
+
+  background: linear-gradient(
+      to bottom,
+      #fff4e6,
+      #ffffff
+  );
+
+}
+
+.achievement-title {
+  text-align: center;
+  font-size: 26px;
+  color: #c40000;
+  margin-bottom: 30px;
+  border-bottom: 3px solid orange;
+  padding-bottom: 10px;
+}
+
+.achievement-wrapper {
+  display: flex;
+  gap: 40px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* LEFT IMAGES */
+
+.achievement-images {
+  flex: 1;
+}
+
+.image-card {
+  background: white;
+  padding: 10px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.image-card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+/* RIGHT BOX */
+
+.achievement-content {
+  flex: 2;
+  background: #eeeeee;
+  padding: 20px;
+  border-radius: 12px;
+
+  height: 420px;   /* Scroll height */
+  overflow-y: auto;  /* Scroll enable */
+
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* MULTI COLUMN LIST */
+
+.achievement-list {
+  list-style: none;
+  padding: 0;
+
+  column-count: 2;  /* ⭐ 2 Column */
+  column-gap: 30px;
+}
+
+.achievement-list li {
+  break-inside: avoid;
+
+  position: relative;
+  padding-left: 26px;
+  margin-bottom: 12px;
+
+  line-height: 1.6;
+}
+
+.achievement-list li::before {
+  content: "✔";
+  position: absolute;
+  left: 0;
+  color: orange;
+  font-weight: bold;
+}
+
+.image-card {
+  width: 280px;
+}
+
+.image-card img {
+  height: 180px;
+}
+
+/* Scroll Style */
+
+.achievement-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.achievement-content::-webkit-scrollbar-thumb {
+  background: orange;
+  border-radius: 10px;
+}
+
+/* ===== Achievement Section ===== */
+
+/* ===== Achievement Section Orange Theme ===== */
+
+.achievement-section{
+
+  padding:70px 40px;
+
+  background: linear-gradient(
+      to bottom,
+      #fff4e6,
+      #ffffff
+  );
+
+}
+
+
+
+.achievement-title {
+  text-align: center;
+  font-size: 30px;
+  color: #003366;
+  margin-bottom: 40px;
+  font-weight: bold;
+}
+
+.achievement-wrapper {
+  display: flex;
+  gap: 40px;
+  max-width: 1200px;
+  margin: auto;
+  align-items: flex-start;
+}
+
+/* Images */
+
+.achievement-images {
+  flex: 1;
+}
+
+.image-card {
+  margin-bottom: 20px;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.image-card img {
+  width: 100%;
+  border-radius: 12px;
+  transition: 0.3s;
+}
+
+.image-card img:hover {
+  transform: scale(1.05);
+}
+
+/* Content */
+
+.achievement-content {
+  flex: 2;
+}
+
+/* List Style */
+
+.achievement-list {
+  list-style: none;
+  padding: 0;
+}
+
+.achievement-list li {
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 14px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.achievement-list li::before {
+  content: "✔";
+  position: absolute;
+  left: 0;
+  color: green;
+  font-weight: bold;
+}
+
+
+
+/* VIDEO SECTION */
+
+.video-section{
+padding:60px 20px;
+background:#f7f7f7;
+text-align:center;
+}
+
+.video-title{
+font-size:28px;
+color:#c30000;
+margin-bottom:30px;
+}
+
+.video-container{
+display:flex;
+justify-content:center;
+gap:30px;
+flex-wrap:wrap;
+}
+
+.video-container video{
+width:420px;
+border-radius:10px;
+box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+
+
+/* ACTIVITIES */
+
+.activities{
+padding:80px 40px;
+background:#f8f8f8;
+text-align:center;
+}
+
+.activity-title{
+font-size:32px;
+margin-bottom:50px;
+position:relative;
+}
+
+.activity-title::after{
+content:"";
+display:block;
+
+width:100%;        /* ⭐ Full width */
+height:5px;
+
+background:#ff7a00;
+
+margin-top:12px;
+border-radius:2px;
+}
+
+.activity-container{
+display:flex;
+justify-content:center;
+gap:35px;
+flex-wrap:wrap;
+}
+
+.activity{
+background:white;
+width:320px;
+padding:20px;
+border-radius:12px;
+box-shadow:0 6px 20px rgba(0,0,0,0.08);
+transition:0.3s;
+}
+
+.activity:hover{
+transform:translateY(-8px);
+box-shadow:0 10px 30px rgba(0,0,0,0.15);
+}
+
+.activity img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.activity-img img{
+width:100%;
+height:200px;
+object-fit:cover;
+transition:0.4s;
+}
+
+.activity:hover img{
+transform:scale(1.1);
+}
+
+.activity h3{
+font-size:20px;
+margin-bottom:8px;
+color:#333;
+}
+
+.activity p{
+font-size:15px;
+color:#666;
+}
+
+
+/* GALLERY */
+
+.gallery{
+padding:60px;
+text-align:center;
+background:white;
+}
+
+.gallery-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+margin-top:30px;
+}
+
+.gallery-grid img{
+width:100%;
+height:250px;
+object-fit:cover;
+border-radius:8px;
+}
+
+
+/* DEMAND SECTION */
+
+/* ===== Demand Section Premium Background ===== */
+
+.demand-section{
+
+  padding:70px 40px;
+
+  background: linear-gradient(
+      to bottom,
+      #fff4e6,
+      #ffffff
+  );
+
+}
+
+.demand-title{
+text-align:center;
+font-size:30px;
+color:#c30000;
+margin-bottom:40px;
+border-bottom:3px solid #ff7a00;
+padding-bottom:12px;
+}
+
+.demand-wrapper{
+display:grid;
+grid-template-columns:420px 1fr;
+gap:40px;
+max-width:1300px;
+margin:auto;
+}
+
+.demand-images{
+display:flex;
+flex-direction:column;
+gap:25px;
+}
+
+.image-card{
+background:white;
+padding:10px;
+border-radius:10px;
+box-shadow:0 4px 15px rgba(0,0,0,0.1);
+}
+
+.image-card img{
+width:100%;
+border-radius:8px;
+}
+
+.demand-content{
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 5px 20px rgba(0,0,0,0.08);
+}
+
+.demand-list{
+list-style:none;
+padding:0;
+margin:0;
+}
+
+.demand-list li{
+position:relative;
+padding-left:28px;
+margin-bottom:16px;
+line-height:1.7;
+font-size:16px;
+color:#333;
+text-align:justify;
+}
+
+.demand-list li::before{
+content:"✔";
+position:absolute;
+left:0;
+top:2px;
+color:#ff7a00;
+font-weight:bold;
+}
+
+
+/* TEAM */
+
+.team-section{
+padding:70px 40px;
+background:#f7f7f7;
+text-align:center;
+}
+
+.team-title{
+font-size:32px;
+margin-bottom:40px;
+}
+
+.team-container{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:30px;
+max-width:1300px;
+margin:auto;
+}
+
+.team-card{
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 5px 20px rgba(0,0,0,0.08);
+transition:0.3s;
+}
+
+.team-card:hover{
+transform:translateY(-5px);
+}
+
+.team-card img{
+width:140px;
+height:140px;
+border-radius:50%;
+object-fit:cover;
+margin-bottom:15px;
+}
+
+.team-card h3{
+font-size:18px;
+margin-bottom:5px;
+}
+
+.team-card p{
+font-size:14px;
+color:#666;
+}
+
+
+/* FOOTER */
+
+footer{
+background:#222;
+color:white;
+text-align:center;
+padding:20px;
+margin-top:40px;
+}
+
+
+/* QR */
+
+#qrcode{
+display:flex;
+justify-content:center;
+align-items:center;
+margin-top:15px;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media(max-width:900px){
+
+.top-bar{
+flex-direction:column;
+gap:5px;
+text-align:center;
+}
+
+.header{
+flex-direction:column;
+gap:10px;
+text-align:center;
+}
+
+nav{
+flex-wrap:wrap;
+justify-content:center;
+}
+
+.slides img{
+height:250px;
+}
+
+.gallery-grid{
+grid-template-columns:1fr 1fr;
+}
+
+.demand-wrapper{
+grid-template-columns:1fr;
+}
+
+.team-container{
+grid-template-columns:repeat(2,1fr);
+}
+
+.video-container video{
+width:100%;
+}
+
+.about{
+padding:40px 20px;
+}
+
+.activities{
+padding:60px 20px;
+}
+
+.gallery{
+padding:40px 20px;
+}
+
+
+
+.team-section{
+padding:50px 20px;
+}
+
+}
+
+/* ABOUT PAGE */
+
+.about-container{
+display:flex;
+gap:40px;
+align-items:flex-start;
+max-width:1200px;
+margin:auto;
+padding:40px 20px;
+}
+
+.about-images{
+flex:1;
+display:grid;
+grid-template-columns:1fr;
+gap:15px;
+}
+
+.about-images img{
+width:100%;
+border-radius:10px;
+}
+
+.about-text{
+flex:1;
+}
+
+.achievement-list{
+padding-left:18px;
+}
+
+.achievement-list li{
+margin-bottom:10px;
+line-height:1.6;
+}
+
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.about-container{
+flex-direction:column;
+padding:20px;
+}
+
+.about-images{
+grid-template-columns:1fr;
+}
+
+.about-text h2{
+font-size:20px;
+}
+
+.achievement-list li{
+font-size:15px;
+}
+
+.page-header{
+padding:20px;
+text-align:center;
+}
+
+.breadcrumb{
+font-size:14px;
+}
+
+}
+
+/* GALLERY PAGE */
+
+.gallery-container{
+max-width:1200px;
+margin:auto;
+padding:40px 20px;
+
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+}
+
+.gallery-container img{
+width:100%;
+height:220px;
+object-fit:cover;
+border-radius:10px;
+transition:0.3s;
+cursor:pointer;
+}
+
+.gallery-container img:hover{
+transform:scale(1.05);
+}
+
+
+/* TABLET */
+
+@media(max-width:900px){
+
+.gallery-container{
+grid-template-columns:repeat(2,1fr);
+}
+
+}
+
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+.gallery-container{
+grid-template-columns:1fr;
+padding:20px;
+}
+
+.gallery-container img{
+height:auto;
+}
+
+.page-header{
+text-align:center;
+padding:20px;
+}
+
+}
+
+@media(max-width:500px){
+
+.gallery-grid{
+grid-template-columns:1fr;
+}
+
+.team-container{
+grid-template-columns:1fr;
+}
+
+nav a{
+font-size:14px;
+}
+
+.logo-area img{
+height:55px;
+}
+
+}
+
+/* CONTACT PAGE */
+
+.contact-section{
+padding:40px 20px;
+background:#fff5eb;
+}
+
+.contact-container{
+max-width:1100px;
+margin:auto;
+display:flex;
+gap:40px;
+}
+
+.contact-info{
+flex:1;
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 8px 20px rgba(0,0,0,0.05);
+}
+
+.contact-info h2{
+color:#ff7a00;
+margin-bottom:10px;
+}
+
+.contact-form{
+flex:1;
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 8px 20px rgba(0,0,0,0.05);
+}
+
+.contact-form h2{
+color:#ff7a00;
+margin-bottom:15px;
+}
+
+.contact-form form{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.contact-form input,
+.contact-form textarea{
+padding:12px;
+border:1px solid #ccc;
+border-radius:6px;
+font-size:14px;
+}
+
+.contact-form textarea{
+height:120px;
+resize:none;
+}
+
+.contact-form button{
+background:#ff7a00;
+color:white;
+border:none;
+padding:14px;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+}
+
+.contact-form button:hover{
+background:#e66900;
+}
+
+.activity-slider {
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.activity-track {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+/* ❌ पुराना remove करो */
+/*
+.activity {
+    min-width: 300px;
+}
+*/
+
+/* ✅ यह use करो */
+.activity-track .activity {
+    width: 320px;     /* पहले जैसा */
+    min-width: 320px; /* slider के लिए जरूरी */
+    margin: 10px;
+}
+}
+
+.prev, .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    border: none;
+    padding: 12px 16px;
+    cursor: pointer;
+    z-index: 999;
+    font-size: 18px;
+    border-radius: 6px;
+}
+
+/* थोड़ा बाहर लाओ ताकि दिखे */
+.prev { left: -10px; }
+.next { right: -10px; }
+
+
+
+/* MAP */
+
+.map-section{
+margin-top:30px;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.contact-container{
+flex-direction:column;
+gap:20px;
+}
+
+.contact-section{
+padding:20px;
+}
+
+.contact-info,
+.contact-form{
+padding:20px;
+}
+
+.contact-form input,
+.contact-form textarea{
+font-size:16px;
+}
+
+
+/* ===== Achievement Mobile Fix ===== */
+
+@media(max-width:768px){
+
+/* Layout vertical करो */
+
+.achievement-wrapper{
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 20px;
+
+}
+
+/* Images center करो */
+
+.achievement-images{
+
+  flex-direction: row;
+
+  justify-content: center;
+
+  gap: 15px;
+
+}
+
+/* Image size छोटा करो */
+
+.image-card{
+
+  width: 140px;
+
+}
+
+.image-card img{
+
+  height: 100px;
+
+  object-fit: cover;
+
+}
+
+/* List 1 column में */
+
+.achievement-list{
+
+  column-count: 1;
+
+}
+
+/* Text readable */
+
+.achievement-list li{
+
+  font-size: 15px;
+
+  line-height: 1.5;
+
+}
+
+
+
+
+}
+
+
+
+
+
+}
