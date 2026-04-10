@@ -420,56 +420,22 @@ display: block;
     padding: 20px 40px;
 }
 
-/* ================= VIDEO MOBILE FIX ================= */
-
 .video-track {
     display: flex;
-    gap: 15px;
+    transition: transform 0.5s ease;
 }
 
-/* Desktop size */
 .video-item {
-    flex: 0 0 auto;
-    width: 320px;
+    min-width: 300px;
+    margin-right: 20px;
 }
 
-/* Video responsive */
 .video-item video {
     width: 100%;
-    height: auto;   /* ⭐ height fix remove */
+    height: 200px;
+    object-fit: contain;
+    background: black;
     border-radius: 10px;
-}
-
-/* ===== MOBILE ===== */
-
-@media (max-width: 768px) {
-
-    .video-slider {
-        overflow: hidden;
-        padding: 10px;
-    }
-
-    .video-track {
-        display: flex;
-        gap: 10px;
-    }
-
-    .video-item {
-        width: 90vw;   /* ⭐ mobile fit */
-        min-width: 90vw;
-    }
-
-    /* arrows hide */
-    .video-prev,
-    .video-next {
-        display: none;
-    }
-
-}
-
-/* Page overflow stop */
-body {
-    overflow-x: hidden;
 }
 
 /* Buttons */
