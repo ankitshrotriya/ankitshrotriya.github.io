@@ -15,6 +15,64 @@ body{
   
 }
 
+/* ================= GLOBAL MOBILE FIX ================= */
+
+body {
+    overflow-x: hidden;
+}
+
+/* ===== VIDEO SLIDER FIX ===== */
+
+.video-slider {
+    position: relative;
+    overflow: hidden;
+    padding: 10px;
+}
+
+.video-track {
+    display: flex;
+    transition: transform 0.4s ease;
+    gap: 12px;
+}
+
+.video-item {
+    flex: 0 0 auto;
+    width: 320px;
+}
+
+.video-item video {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* ===== MOBILE ===== */
+
+@media (max-width: 768px) {
+
+    .video-item {
+        width: 92vw;
+        min-width: 92vw;
+    }
+
+    .video-prev,
+    .video-next {
+        display: none;
+    }
+
+}
+
+/* ===== ACTIVITIES MOBILE FIX ===== */
+
+@media (max-width: 768px) {
+
+.activity-track .activity {
+    width: 90vw;
+    min-width: 90vw;
+}
+
+}
+
 /* Mobile Open Button */
 
 .mobile-open-btn {
