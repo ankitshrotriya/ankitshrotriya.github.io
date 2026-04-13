@@ -1836,8 +1836,53 @@ font-size:16px;
 
 }
 
+/* ===== STRONG MOBILE NAV + TITLE FIX ===== */
 
+@media (max-width:768px){
 
+/* LOGO AREA FIX */
+
+.logo-area{
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+}
+
+.logo-area h2{
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+    white-space: normal !important;
+}
+
+/* NAV BUTTON FIX */
+
+nav{
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 6px !important;
+}
+
+/* REGISTRATION + DONATION SAME LINE */
+
+.register-btn,
+.donation-btn{
+    display: inline-block !important;
+    padding: 6px 12px !important;
+    font-size: 14px !important;
+}
+
+/* dono ko last me ek line me rakhega */
+
+.register-btn{
+    order: 100 !important;
+}
+
+.donation-btn{
+    order: 101 !important;
+}
+
+}
 
 }
 
