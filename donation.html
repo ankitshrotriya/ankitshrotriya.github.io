@@ -57,7 +57,8 @@ gap:14px;
 grid-column:1;
 }
 
-input{
+input,
+select{
 font-size:16px;
 padding:12px;
 }
@@ -158,9 +159,11 @@ grid-column:1/3;
 label{
 font-size:14px;
 margin-bottom:4px;
+font-weight:bold;
 }
 
-input{
+input,
+select{
 padding:10px;
 border:1px solid #ccc;
 border-radius:6px;
@@ -171,11 +174,47 @@ font-size:14px;
 
 .qr-box{
 text-align:center;
-margin-top:20px;
+margin-top:25px;
+display:none;
+animation:fadeIn .4s ease;
 }
 
 .qr-box img{
-width:230px;
+width:260px;
+border:5px solid #f1f5f9;
+border-radius:20px;
+padding:10px;
+background:white;
+}
+
+.amount-box{
+margin-top:15px;
+font-size:24px;
+font-weight:bold;
+color:#16a34a;
+}
+
+.upi-box{
+margin-top:10px;
+background:#fff7ed;
+padding:12px;
+border-radius:10px;
+font-size:14px;
+color:#444;
+}
+
+@keyframes fadeIn{
+
+from{
+opacity:0;
+transform:translateY(15px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
 }
 
 /* button */
@@ -258,30 +297,207 @@ background:#e66900;
 
 </div>
 
+<!-- =========================
+PAYMENT SECTION
+========================= -->
+
 <div class="section">Payment</div>
 
-<div class="qr-box">
+<div class="form-group">
 
-<img src="images/payment-qr.jpg">
+<label>Select Donation Amount</label>
 
-<p>UPI ID: Mpvmtks.82233143@hdfcbank</p>
+<select
+id="donationAmount"
+name="donation_amount"
+onchange="generateQR()"
+required>
 
-<p>QR स्कैन करके दान राशि भेजें</p>
+<option value="">
+Select Amount
+</option>
+
+<option value="100">
+Monthly Donation ₹100
+</option>
+
+<option value="600">
+Halfyearly Donation ₹600
+</option>
+
+<option value="1200">
+Yearly Donation ₹1200
+</option>
+
+<option value="custom">
+Any Amount
+</option>
+
+</select>
+
+<!-- =========================
+CUSTOM AMOUNT
+========================= -->
+
+<div
+id="customAmountBox"
+style="
+display:none;
+margin-top:15px;">
+
+<label>
+
+Enter Amount
+
+</label>
+
+<input
+type="number"
+id="customAmount"
+placeholder="Enter Any Amount"
+oninput="generateQR()"
+style="
+width:100%;
+padding:12px;
+border:1px solid #ccc;
+border-radius:8px;
+margin-top:8px;">
 
 </div>
+
+</div>
+
+<!-- =========================
+QR BOX
+========================= -->
+
+<div
+id="qrBox"
+class="qr-box">
+
+<h2 style="color:#ff7a00;">
+
+Scan QR To Pay
+
+</h2>
+
+<img
+id="qrImage">
+
+<div
+id="amountText"
+class="amount-box">
+
+</div>
+
+<div class="upi-box">
+
+UPI ID :
+Mpvmtks.82233143@hdfcbank
+
+</div>
+
+<p style="
+margin-top:15px;
+color:#555;">
+
+QR स्कैन करते ही राशि अपने आप भर जाएगी
+
+</p>
+
+</div>
+
+<!-- =========================
+PAYMENT VERIFY
+========================= -->
 
 <div class="section">Payment Verification</div>
 
 <div class="form-group">
+
 <label>UTR नंबर</label>
-<input type="text" name="utr_number" required>
+
+<input type="text"
+name="utr_number"
+required>
+
 </div>
 
-<button type="submit">Donation Submit</button>
+<button type="submit">
+
+Donation Submit
+
+</button>
 
 </form>
 
 </div>
+
+<script>
+
+function generateQR(){
+
+let amount = document.getElementById(
+"donationAmount"
+).value;
+
+if(amount != ""){
+
+// =========================
+// YOUR UPI LINK
+// =========================
+
+let upiLink =
+
+"upi://pay?pa=Mpvmtks.82233143@hdfcbank"
+
++ "&pn=Donation"
+
++ "&am=" + amount
+
++ "&cu=INR";
+
+// =========================
+// QR GENERATOR
+// =========================
+
+let qrURL =
+
+"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="
+
++ encodeURIComponent(upiLink);
+
+// =========================
+// SHOW QR
+// =========================
+
+document.getElementById(
+"qrImage"
+).src = qrURL;
+
+document.getElementById(
+"amountText"
+).innerHTML =
+
+"Amount : ₹" + amount;
+
+document.getElementById(
+"qrBox"
+).style.display = "block";
+
+}
+
+else{
+
+document.getElementById(
+"qrBox"
+).style.display = "none";
+
+}
+
+}
+
+</script>
 
 </body>
 </html>
