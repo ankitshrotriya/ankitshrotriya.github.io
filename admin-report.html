@@ -9,25 +9,41 @@
 
 <style>
 
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
 body{
 font-family:Arial,sans-serif;
 background:#f5f5f5;
-margin:0;
-padding:20px;
+padding:15px;
 }
 
 h1{
 text-align:center;
 color:#ff7a00;
 margin-bottom:20px;
+font-size:28px;
 }
+
+.loader{
+text-align:center;
+font-size:20px;
+margin-top:50px;
+font-weight:bold;
+color:#ff7a00;
+}
+
+/* DESKTOP TABLE */
 
 .table-container{
 overflow-x:auto;
 background:white;
 padding:15px;
-border-radius:10px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
+border-radius:12px;
+box-shadow:0 4px 12px rgba(0,0,0,0.1);
 }
 
 table{
@@ -41,6 +57,7 @@ background:#ff7a00;
 color:white;
 padding:12px;
 font-size:14px;
+white-space:nowrap;
 }
 
 td{
@@ -54,24 +71,62 @@ tr:hover{
 background:#f9f9f9;
 }
 
+/* MOBILE CARD VIEW */
+
+.mobile-cards{
+display:none;
+}
+
+.card{
+background:white;
+padding:15px;
+margin-bottom:15px;
+border-radius:12px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.card h3{
+color:#ff7a00;
+margin-bottom:10px;
+font-size:20px;
+}
+
+.card p{
+margin:6px 0;
+font-size:14px;
+word-break:break-word;
+}
+
+.card strong{
+color:#333;
+}
+
+.action-buttons{
+margin-top:12px;
+display:flex;
+gap:10px;
+}
+
 .approve-btn{
 background:green;
 color:white;
 border:none;
-padding:8px 12px;
-border-radius:5px;
+padding:10px 14px;
+border-radius:6px;
 cursor:pointer;
-margin:2px;
+font-size:14px;
+flex:1;
 }
 
 .reject-btn{
 background:red;
 color:white;
 border:none;
-padding:8px 12px;
-border-radius:5px;
+padding:10px 14px;
+border-radius:6px;
 cursor:pointer;
-margin:2px;
+font-size:14px;
+flex:1;
 }
 
 .status-approved{
@@ -89,10 +144,43 @@ color:orange;
 font-weight:bold;
 }
 
-.loader{
-text-align:center;
-font-size:18px;
-margin-top:40px;
+/* MOBILE */
+
+@media(max-width:768px){
+
+body{
+padding:10px;
+}
+
+h1{
+font-size:22px;
+}
+
+.table-container{
+display:none;
+}
+
+.mobile-cards{
+display:block;
+}
+
+.card{
+padding:14px;
+}
+
+.card p{
+font-size:13px;
+}
+
+.action-buttons{
+flex-direction:column;
+}
+
+.approve-btn,
+.reject-btn{
+width:100%;
+}
+
 }
 
 </style>
@@ -106,6 +194,8 @@ margin-top:40px;
 <div class="loader" id="loader">
 Loading Data...
 </div>
+
+<!-- DESKTOP TABLE -->
 
 <div class="table-container" id="tableContainer" style="display:none;">
 
@@ -143,6 +233,11 @@ Loading Data...
 
 </div>
 
+<!-- MOBILE CARDS -->
+
+<div class="mobile-cards" id="mobileCards">
+</div>
+
 <script type="module">
 
 import { createClient }
@@ -178,7 +273,11 @@ return
 
 const body = document.getElementById('reportBody')
 
+const mobileCards = document.getElementById('mobileCards')
+
 body.innerHTML = ''
+
+mobileCards.innerHTML = ''
 
 if(data.length === 0){
 
@@ -186,6 +285,12 @@ body.innerHTML = `
 <tr>
 <td colspan="16">No Data Found</td>
 </tr>
+`
+
+mobileCards.innerHTML = `
+<div class="card">
+No Data Found
+</div>
 `
 
 }
@@ -208,6 +313,8 @@ statusText = 'Rejected'
 statusClass = 'status-rejected'
 
 }
+
+/* DESKTOP TABLE */
 
 body.innerHTML += `
 
@@ -254,6 +361,79 @@ Reject
 
 `
 
+/* MOBILE CARDS */
+
+mobileCards.innerHTML += `
+
+<div class="card">
+
+<h3>${item.name || ''}</h3>
+
+<p><strong>ID:</strong> ${item.id}</p>
+
+<p><strong>Father Name:</strong>
+${item.father_name || ''}</p>
+
+<p><strong>Email:</strong>
+${item.email || ''}</p>
+
+<p><strong>Mobile:</strong>
+${item.mobile || ''}</p>
+
+<p><strong>DOB:</strong>
+${item.dob || ''}</p>
+
+<p><strong>District:</strong>
+${item.district || ''}</p>
+
+<p><strong>Company:</strong>
+${item.company_name || ''}</p>
+
+<p><strong>Position:</strong>
+${item.position || ''}</p>
+
+<p><strong>Office:</strong>
+${item.office_name || ''}</p>
+
+<p><strong>Employee Class:</strong>
+${item.employee_class || ''}</p>
+
+<p><strong>Pincode:</strong>
+${item.pincode || ''}</p>
+
+<p><strong>Fee:</strong>
+₹${item.membership_fee || ''}</p>
+
+<p><strong>UTR:</strong>
+${item.utr_number || ''}</p>
+
+<p class="${statusClass}">
+<strong>Status:</strong>
+${statusText}
+</p>
+
+<div class="action-buttons">
+
+<button
+class="approve-btn"
+onclick="updateStatus(${item.id}, true)"
+>
+Approve
+</button>
+
+<button
+class="reject-btn"
+onclick="updateStatus(${item.id}, false)"
+>
+Reject
+</button>
+
+</div>
+
+</div>
+
+`
+
 }
 
 window.updateStatus = async function(id, status){
@@ -283,9 +463,9 @@ loadData()
 
 }
 
-document.getElementById('loader').style.display = 'none'
+document.getElementById('loader').style.display='none'
 
-document.getElementById('tableContainer').style.display = 'block'
+document.getElementById('tableContainer').style.display='block'
 
 }
 
