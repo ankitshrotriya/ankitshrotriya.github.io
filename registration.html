@@ -160,6 +160,7 @@ gap:10px;
 }
 
 }
+
 .logo-area{
 display:flex;
 align-items:center;
@@ -254,7 +255,6 @@ height:55px;
 
 <body>
 
-
 <!-- HEADER -->
 
 <header class="header">
@@ -283,20 +283,18 @@ height:55px;
 
 </header>
 
-
-
 <div class="container">
 
 <h1>म.प्र.वि.मं. तकनीकी कर्मचारी संघ</h1>
 <h3 style="text-align:center;">M.P.E.B Takneeki Karmachari Sangh</h3>
-<p>मुख्य कार्यालय: F-11, विद्युत नगर, रामपुर, जबलपुर – 482008 (म.प्र.)</p>
+
+<p>
+मुख्य कार्यालय: एम-11, विद्युत नगर, रामपुर, जबलपुर – 482008 (म.प्र.)
+</p>
 
 <h2>संगठन सदस्यता पंजीकरण</h2>
-<form action="https://api.web3forms.com/submit" method="POST">
 
-<input type="hidden" name="access_key" value="ce2e7089-54a4-45dc-90e9-915f2dbf3c85">
-<input type="hidden" name="subject" value="New Membership Registration">
-<input type="hidden" name="from_name" value="Union Membership Form">
+<form id="membershipForm">
 
 <div class="section">व्यक्तिगत जानकारी</div>
 
@@ -304,33 +302,35 @@ height:55px;
 
 <div class="form-group">
 <label>पूरा नाम</label>
-<input type="text" name="name">
+<input type="text" name="name" required>
 </div>
 
 <div class="form-group">
 <label>पिता का नाम</label>
-<input type="text" name="father_name">
+<input type="text" name="father_name" required>
 </div>
 
 <div class="form-group">
 <label>ईमेल</label>
-<input type="email" name="email">
+<input type="email" name="email" required>
 </div>
 
 <div class="form-group">
 <label>मोबाइल नंबर</label>
-<input type="text" name="mobile">
+<input type="text" name="mobile" required>
 </div>
 
 <div class="form-group">
 <label>जन्म तिथि</label>
-<input type="date" name="dob">
+<input type="date" name="dob" required>
 </div>
 
 <div class="form-group">
+
 <label>जिला</label>
 
-<select name="district">
+<select name="district" required>
+
 <option value="">जिला चयन करें</option>
 
 <option>Agar Malwa</option>
@@ -390,9 +390,11 @@ height:55px;
 </div>
 
 <div class="form-group">
+
 <label>कंपनी का नाम</label>
 
-<select name="company_name">
+<select name="company_name" required>
+
 <option value="">चयन करें</option>
 
 <option>Poory Kshetra V.V. Co. Ltd.</option>
@@ -407,9 +409,11 @@ height:55px;
 </div>
 
 <div class="form-group">
+
 <label>पद</label>
 
-<select name="position">
+<select name="position" required>
+
 <option value="">चयन करें</option>
 
 <option>CGM/CE/ED</option>
@@ -433,13 +437,14 @@ height:55px;
 
 <div class="form-group">
 <label>कार्यालय का नाम</label>
-<input type="text" name="office_name">
+<input type="text" name="office_name" required>
 </div>
 
 <div class="form-group">
+
 <label>अधिकारी / कर्मचारी वर्ग</label>
 
-<select name="employee_class">
+<select name="employee_class" required>
 
 <option>Board Officer/Employee</option>
 <option>Company Officer/Employee</option>
@@ -453,20 +458,37 @@ height:55px;
 
 <div class="form-group">
 <label>पिन कोड</label>
-<input type="text" name="pincode">
+<input type="text" name="pincode" required>
 </div>
 
 <div class="form-group full">
+
 <label>सदस्यता शुल्क प्रकार</label>
 
-<select name="membership_fee" id="membership_fee" onchange="updateAmount()">
+<select
+name="membership_fee"
+id="membership_fee"
+onchange="updateAmount()"
+required
+>
 
 <option value="">चयन करें</option>
 
-<option value="2100">Life Guardian Membership - ₹2100</option>
-<option value="500">1st & 2nd Grade Officers - ₹500</option>
-<option value="300">3rd & 4th Class Employees - ₹300</option>
-<option value="150">Outsourced / Contractual - ₹150</option>
+<option value="2100">
+Life Guardian Membership - ₹2100
+</option>
+
+<option value="500">
+1st & 2nd Grade Officers - ₹500
+</option>
+
+<option value="300">
+3rd & 4th Class Employees - ₹300
+</option>
+
+<option value="150">
+Outsourced / Contractual - ₹150
+</option>
 
 </select>
 
@@ -482,24 +504,24 @@ height:55px;
 
 <p>QR स्कैन करके ऊपर दिखाई गई राशि का भुगतान करें</p>
 
-
 <div class="section">भुगतान विवरण</div>
 
 <div class="form-grid">
 
 <div class="form-group full">
 <label>UTR नंबर</label>
-<input type="text" name="utr_number">
+<input type="text" name="utr_number" required>
 </div>
 
 </div>
 
-<button>पंजीकरण सबमिट करें</button>
+<button type="submit">
+पंजीकरण सबमिट करें
+</button>
+
 </form>
 
 </div>
-
-</body>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
@@ -511,11 +533,12 @@ let fee=document.getElementById("membership_fee").value
 
 let display=document.getElementById("amountDisplay")
 
-display.innerHTML=fee ? "₹"+fee : "₹0"
+display.innerHTML = fee ? "₹"+fee : "₹0"
 
 if(fee){
 
-let upi="Mpvmtks.82233143@hdfcbank"
+let upi="9977885049@ibl"
+
 let name="Union Membership"
 
 let upiLink=`upi://pay?pa=${upi}&pn=${name}&am=${fee}&cu=INR`
@@ -533,4 +556,133 @@ height:200
 }
 
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script type="module">
+
+import { createClient }
+from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+const supabaseUrl =
+'https://uxdeihxbacsrpxugibqq.supabase.co'
+
+const supabaseKey =
+'sb_publishable_toimxIMSyU-ld7bE-5AjYA_x7CmUh_G'
+
+const supabase = createClient(
+supabaseUrl,
+supabaseKey
+)
+
+const form = document.getElementById('membershipForm')
+
+const submitBtn = document.querySelector('button[type="submit"]')
+
+form.addEventListener('submit', async function(e){
+
+e.preventDefault()
+
+submitBtn.disabled = true
+submitBtn.innerHTML = 'Processing...'
+
+const formData = new FormData(form)
+
+const mobile = formData.get('mobile')
+const utr = formData.get('utr_number')
+
+try{
+
+// MOBILE CHECK
+
+const { data: mobileCheck } = await supabase
+.from('membership_registration')
+.select('id')
+.eq('mobile', mobile)
+
+// UTR CHECK
+
+const { data: utrCheck } = await supabase
+.from('membership_registration')
+.select('id')
+.eq('utr_number', utr)
+
+if(mobileCheck.length > 0){
+
+alert('Mobile number already registered')
+
+submitBtn.disabled = false
+submitBtn.innerHTML = 'पंजीकरण सबमिट करें'
+
+return
+
+}
+
+if(utrCheck.length > 0){
+
+alert('UTR Number already used')
+
+submitBtn.disabled = false
+submitBtn.innerHTML = 'पंजीकरण सबमिट करें'
+
+return
+
+}
+
+// INSERT DATA
+
+const data = {
+
+name: formData.get('name'),
+father_name: formData.get('father_name'),
+email: formData.get('email'),
+mobile: mobile,
+dob: formData.get('dob'),
+district: formData.get('district'),
+company_name: formData.get('company_name'),
+position: formData.get('position'),
+office_name: formData.get('office_name'),
+employee_class: formData.get('employee_class'),
+pincode: formData.get('pincode'),
+membership_fee: formData.get('membership_fee'),
+utr_number: utr
+
+}
+
+const { error } = await supabase
+.from('membership_registration')
+.insert([data])
+
+if(error){
+
+alert('Error: ' + error.message)
+
+}else{
+
+alert('Registration Successful')
+
+form.reset()
+
+document.getElementById("amountDisplay").innerHTML="₹0"
+
+document.getElementById("qrcode").innerHTML=""
+
+}
+
+}catch(err){
+
+alert('Something went wrong')
+
+console.log(err)
+
+}
+
+submitBtn.disabled = false
+submitBtn.innerHTML = 'पंजीकरण सबमिट करें'
+
+})
+
+</script>
+
+</body>
 </html>
