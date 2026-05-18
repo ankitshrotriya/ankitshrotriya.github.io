@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Report</title>
+
+<style>
+
+body{
+font-family:Arial,sans-serif;
+background:#f5f5f5;
+margin:0;
+padding:20px;
+}
+
+h1{
+text-align:center;
+color:#ff7a00;
+margin-bottom:20px;
+}
+
+.table-container{
+overflow-x:auto;
+background:white;
+padding:15px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+min-width:1400px;
+}
+
+th{
+background:#ff7a00;
+color:white;
+padding:12px;
+font-size:14px;
+}
+
+td{
+padding:10px;
+border-bottom:1px solid #ddd;
+font-size:14px;
+text-align:center;
+}
+
+tr:hover{
+background:#f9f9f9;
+}
+
+.approve-btn{
+background:green;
+color:white;
+border:none;
+padding:8px 12px;
+border-radius:5px;
+cursor:pointer;
+margin:2px;
+}
+
+.reject-btn{
+background:red;
+color:white;
+border:none;
+padding:8px 12px;
+border-radius:5px;
+cursor:pointer;
+margin:2px;
+}
+
+.status-approved{
+color:green;
+font-weight:bold;
+}
+
+.status-rejected{
+color:red;
+font-weight:bold;
+}
+
+.status-pending{
+color:orange;
+font-weight:bold;
+}
+
+.loader{
+text-align:center;
+font-size:18px;
+margin-top:40px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Membership Registration Report</h1>
+
+<div class="loader" id="loader">
+Loading Data...
+</div>
+
+<div class="table-container" id="tableContainer" style="display:none;">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Name</th>
+<th>Father Name</th>
+<th>Email</th>
+<th>Mobile</th>
+<th>DOB</th>
+<th>District</th>
+<th>Company</th>
+<th>Position</th>
+<th>Office</th>
+<th>Employee Class</th>
+<th>Pincode</th>
+<th>Fee</th>
+<th>UTR</th>
+<th>Status</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="reportBody">
+</tbody>
+
+</table>
+
+</div>
+
+<script type="module">
+
+import { createClient }
+from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+const supabaseUrl =
+'https://uxdeihxbacsrpxugibqq.supabase.co'
+
+const supabaseKey =
+'sb_publishable_toimxIMSyU-ld7bE-5AjYA_x7CmUh_G'
+
+const supabase = createClient(
+supabaseUrl,
+supabaseKey
+)
+
+async function loadData(){
+
+const { data, error } = await supabase
+.from('membership_registration')
+.select('*')
+.order('id', { ascending:false })
+
+console.log(data)
+console.log(error)
+
+if(error){
+
+alert(error.message)
+return
+
+}
+
+const body = document.getElementById('reportBody')
+
+body.innerHTML = ''
+
+if(data.length === 0){
+
+body.innerHTML = `
+<tr>
+<td colspan="16">No Data Found</td>
+</tr>
+`
+
+}
+
+for(let item of data){
+
+let statusText = 'Pending'
+let statusClass = 'status-pending'
+
+if(item.payment_status === true){
+
+statusText = 'Approved'
+statusClass = 'status-approved'
+
+}
+
+if(item.payment_status === false){
+
+statusText = 'Rejected'
+statusClass = 'status-rejected'
+
+}
+
+body.innerHTML += `
+
+<tr>
+
+<td>${item.id}</td>
+<td>${item.name || ''}</td>
+<td>${item.father_name || ''}</td>
+<td>${item.email || ''}</td>
+<td>${item.mobile || ''}</td>
+<td>${item.dob || ''}</td>
+<td>${item.district || ''}</td>
+<td>${item.company_name || ''}</td>
+<td>${item.position || ''}</td>
+<td>${item.office_name || ''}</td>
+<td>${item.employee_class || ''}</td>
+<td>${item.pincode || ''}</td>
+<td>${item.membership_fee || ''}</td>
+<td>${item.utr_number || ''}</td>
+
+<td class="${statusClass}">
+${statusText}
+</td>
+
+<td>
+
+<button
+class="approve-btn"
+onclick="updateStatus(${item.id}, true)"
+>
+Approve
+</button>
+
+<button
+class="reject-btn"
+onclick="updateStatus(${item.id}, false)"
+>
+Reject
+</button>
+
+</td>
+
+</tr>
+
+`
+
+}
+
+window.updateStatus = async function(id, status){
+
+let confirmMsg = status
+? 'Approve this payment?'
+: 'Reject this payment?'
+
+if(!confirm(confirmMsg)) return
+
+const { error } = await supabase
+.from('membership_registration')
+.update({ payment_status: status })
+.eq('id', id)
+
+if(error){
+
+alert(error.message)
+
+}else{
+
+alert('Status Updated Successfully')
+
+loadData()
+
+}
+
+}
+
+document.getElementById('loader').style.display = 'none'
+
+document.getElementById('tableContainer').style.display = 'block'
+
+}
+
+loadData()
+
+</script>
+
+</body>
+</html>
