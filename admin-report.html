@@ -278,6 +278,7 @@ async function loadData(){
 const { data, error } = await supabase
 .from('membership_registration')
 .select('*')
+.is('payment_status', null)
 .order('id', { ascending:false })
 
 console.log(data)
