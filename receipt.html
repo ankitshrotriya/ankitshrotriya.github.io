@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Membership Receipt</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Arial,sans-serif;
+background:#f5f5f5;
+padding:15px;
+}
+
+/* TOP FORM */
+
+.container{
+max-width:500px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:12px;
+box-shadow:0 4px 12px rgba(0,0,0,0.1);
+margin-top:30px;
+}
+
+h2{
+text-align:center;
+color:#0b2f8a;
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:12px;
+border:1px solid #ccc;
+border-radius:8px;
+margin-bottom:15px;
+font-size:16px;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#0b2f8a;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+}
+
+/* RECEIPT */
+
+#receipt{
+display:none;
+margin-top:20px;
+}
+
+.receipt-box{
+
+width:100%;
+max-width:1100px;
+margin:0 auto;
+
+background:white;
+
+border:6px solid #0b2f8a;
+
+padding:14px;
+
+}
+
+/* HEADER */
+
+.receipt-header{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:12px;
+
+}
+
+.logo{
+width:95px;
+}
+
+.title-section{
+flex:1;
+text-align:center;
+}
+
+.title-section h1{
+font-size:38px;
+color:#0b2f8a;
+line-height:1.2;
+font-weight:bold;
+}
+
+.title-section h2{
+font-size:18px;
+margin-top:5px;
+}
+
+.title-section p{
+font-size:14px;
+margin-top:4px;
+}
+
+.receipt-info{
+width:190px;
+border:2px solid #0b2f8a;
+border-radius:8px;
+overflow:hidden;
+}
+
+.receipt-info div{
+display:flex;
+justify-content:space-between;
+padding:8px;
+border-bottom:1px solid #0b2f8a;
+font-size:12px;
+}
+
+.receipt-info div:last-child{
+border-bottom:none;
+}
+
+/* TITLE */
+
+.receipt-title{
+
+margin-top:12px;
+
+background:#0b2f8a;
+
+color:white;
+
+padding:8px;
+
+font-size:24px;
+
+font-weight:bold;
+
+text-align:center;
+
+border-radius:8px;
+
+}
+
+/* SECTIONS */
+
+.sections{
+
+display:grid;
+
+grid-template-columns:1fr 1fr;
+
+gap:12px;
+
+margin-top:12px;
+
+}
+
+.section{
+
+border:2px solid #0b2f8a;
+
+border-radius:8px;
+
+overflow:hidden;
+
+}
+
+.section-title{
+
+background:#0b2f8a;
+
+color:white;
+
+padding:8px;
+
+font-size:16px;
+
+font-weight:bold;
+
+text-align:center;
+
+}
+
+.row{
+
+display:flex;
+
+border-bottom:1px solid #ccc;
+
+}
+
+.row:last-child{
+border-bottom:none;
+}
+
+.label{
+
+width:40%;
+
+padding:8px;
+
+font-size:12px;
+
+font-weight:bold;
+
+background:#f8f8f8;
+
+border-right:1px solid #ccc;
+
+}
+
+.value{
+
+flex:1;
+
+padding:8px;
+
+font-size:12px;
+
+}
+
+/* AMOUNT */
+
+.amount-box{
+
+margin-top:12px;
+
+display:flex;
+
+align-items:center;
+
+border:2px solid #0b2f8a;
+
+border-radius:8px;
+
+overflow:hidden;
+
+}
+
+.amount-title{
+
+background:#0b2f8a;
+
+color:white;
+
+padding:10px;
+
+font-size:16px;
+
+font-weight:bold;
+
+width:35%;
+
+}
+
+.amount-value{
+
+flex:1;
+
+padding:10px;
+
+font-size:28px;
+
+font-weight:bold;
+
+color:#0b2f8a;
+
+}
+
+/* NOTE */
+
+.note{
+
+margin-top:12px;
+
+font-size:11px;
+
+line-height:1.5;
+
+}
+
+/* FOOTER */
+
+.footer{
+
+margin-top:12px;
+
+background:#0b2f8a;
+
+color:white;
+
+padding:8px;
+
+font-size:12px;
+
+font-weight:bold;
+
+text-align:center;
+
+}
+
+/* DOWNLOAD BUTTON */
+
+.download-btn{
+margin-top:15px;
+background:green;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.receipt-header{
+flex-direction:column;
+}
+
+.sections{
+grid-template-columns:1fr;
+}
+
+.title-section h1{
+font-size:28px;
+}
+
+.receipt-info{
+width:100%;
+}
+
+}
+
+/* PRINT */
+
+@media print{
+
+.container{
+display:none !important;
+}
+
+.download-btn{
+display:none !important;
+}
+
+body{
+background:white;
+padding:0;
+margin:0;
+}
+
+.receipt-box{
+border:6px solid #0b2f8a;
+margin:0;
+width:100%;
+max-width:100%;
+}
+
+@page{
+size:A4 landscape;
+margin:5mm;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Generate Receipt</h2>
+
+<input
+type="text"
+id="mobile"
+placeholder="Enter Mobile Number"
+>
+
+<button id="generateBtn">
+Generate Receipt
+</button>
+
+</div>
+
+<div id="receipt"></div>
+
+<script type="module">
+
+import { createClient }
+from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+const supabaseUrl =
+'https://uxdeihxbacsrpxugibqq.supabase.co'
+
+const supabaseKey =
+'sb_publishable_toimxIMSyU-ld7bE-5AjYA_x7CmUh_G'
+
+const supabase = createClient(
+supabaseUrl,
+supabaseKey
+)
+
+function formatDate(dateString){
+
+const date = new Date(dateString)
+
+return date.toLocaleString('en-IN')
+
+}
+
+function generateReceiptNumber(){
+
+return Math.floor(
+100000 + Math.random() * 900000
+).toString()
+
+}
+
+function generateInvoiceNumber(){
+
+return 'INV/' +
+new Date().getFullYear() +
+'/' +
+Math.floor(Math.random() * 10000)
+
+}
+
+document
+.getElementById('generateBtn')
+.addEventListener('click', async function(){
+
+const mobile =
+document.getElementById('mobile').value.trim()
+
+if(!mobile){
+
+alert('Enter Mobile Number')
+return
+
+}
+
+const { data, error } = await supabase
+.from('membership_registration')
+.select('*')
+.eq('mobile', mobile)
+.eq('payment_status', true)
+.limit(1)
+
+if(error){
+
+alert(error.message)
+return
+
+}
+
+if(!data || data.length === 0){
+
+alert('Approved Member Not Found')
+return
+
+}
+
+const member = data[0]
+
+/* EXISTING OR NEW */
+
+let receiptNumber =
+member.receipt_number
+
+let invoiceNumber =
+member.invoice_number
+
+if(!receiptNumber){
+
+receiptNumber =
+generateReceiptNumber()
+
+}
+
+if(!invoiceNumber){
+
+invoiceNumber =
+generateInvoiceNumber()
+
+}
+
+/* SAVE */
+
+if(
+!member.receipt_number ||
+!member.invoice_number
+){
+
+await supabase
+.from('membership_registration')
+.update({
+
+receipt_number: receiptNumber,
+
+invoice_number: invoiceNumber
+
+})
+.eq('id', member.id)
+
+}
+
+document.getElementById('receipt').style.display='block'
+
+document.getElementById('receipt').innerHTML = `
+
+<div class="receipt-box">
+
+<div class="receipt-header">
+
+<img
+src="images/logo.png"
+class="logo"
+>
+
+<div class="title-section">
+
+<h1>
+म.प्र.वि.म. तकनीकी कर्मचारी संघ
+</h1>
+
+<h2>
+(पंजीयन क्रमांक: 2902 दिनांक 11 जनवरी 1983)
+</h2>
+
+<p>
+मुख्य कार्यालय:
+एम-11, विद्युत नगर,
+रामपुर, जबलपुर – 482008
+</p>
+
+</div>
+
+<div class="receipt-info">
+
+<div>
+<span>रसीद क्रमांक</span>
+<strong>${receiptNumber}</strong>
+</div>
+
+<div>
+<span>दिनांक</span>
+<strong>
+${formatDate(member.created_at)}
+</strong>
+</div>
+
+<div>
+<span>पद</span>
+<strong>
+${member.position || ''}
+</strong>
+</div>
+
+</div>
+
+</div>
+
+<div class="receipt-title">
+रसीद / RECEIPT
+</div>
+
+<div class="sections">
+
+<div class="section">
+
+<div class="section-title">
+सदस्य विवरण / MEMBER DETAILS
+</div>
+
+<div class="row">
+<div class="label">सदस्य का नाम</div>
+<div class="value">${member.name || ''}</div>
+</div>
+
+<div class="row">
+<div class="label">पिता / पति का नाम</div>
+<div class="value">${member.father_name || ''}</div>
+</div>
+
+<div class="row">
+<div class="label">कंपनी / विभाग</div>
+<div class="value">${member.company_name || ''}</div>
+</div>
+
+<div class="row">
+<div class="label">मोबाइल नंबर</div>
+<div class="value">${member.mobile || ''}</div>
+</div>
+
+<div class="row">
+<div class="label">कार्यालय</div>
+<div class="value">${member.office_name || ''}</div>
+</div>
+
+<div class="row">
+<div class="label">ईमेल</div>
+<div class="value">${member.email || ''}</div>
+</div>
+
+</div>
+
+<div class="section">
+
+<div class="section-title">
+भुगतान विवरण / PAYMENT DETAILS
+</div>
+
+<div class="row">
+<div class="label">सदस्यता शुल्क</div>
+<div class="value">Membership Fee</div>
+</div>
+
+<div class="row">
+<div class="label">सदस्यता शुल्क राशि</div>
+<div class="value">
+₹${member.membership_fee || ''}
+</div>
+</div>
+
+<div class="row">
+<div class="label">भुगतान का प्रकार</div>
+<div class="value">Online Payment</div>
+</div>
+
+<div class="row">
+<div class="label">UTR नंबर</div>
+<div class="value">
+${member.utr_number || ''}
+</div>
+</div>
+
+<div class="row">
+<div class="label">भुगतान की दिनांक</div>
+<div class="value">
+${formatDate(member.created_at)}
+</div>
+</div>
+
+<div class="row">
+<div class="label">इनवॉइस नंबर</div>
+<div class="value">
+${invoiceNumber}
+</div>
+</div>
+
+</div>
+
+</div>
+
+<div class="amount-box">
+
+<div class="amount-title">
+कुल प्राप्त राशि
+</div>
+
+<div class="amount-value">
+₹ ${member.membership_fee || ''}
+</div>
+
+</div>
+
+<div class="note">
+
+• यह रसीद केवल सदस्यता शुल्क प्राप्ति हेतु मान्य है।<br>
+
+• यह कंप्यूटर जनित रसीद है। हस्ताक्षर की आवश्यकता नहीं है।<br>
+
+• किसी भी प्रकार की जानकारी हेतु कार्यालय से संपर्क करें。
+
+</div>
+
+<div class="footer">
+
+This is a computer generated receipt.
+
+</div>
+
+<button
+class="download-btn"
+onclick="downloadReceipt()"
+>
+
+Download / Print Receipt
+
+</button>
+
+</div>
+
+`
+
+})
+/* DOWNLOAD FUNCTION */
+
+window.downloadReceipt = function(){
+
+const receiptHTML =
+document.querySelector('.receipt-box').outerHTML
+
+const printWindow = window.open(
+'',
+'_blank',
+'width=1400,height=900'
+)
+
+const style = `
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Arial,sans-serif;
+background:white;
+padding:10px;
+}
+
+/* RECEIPT */
+
+.receipt-box{
+
+width:100%;
+max-width:1100px;
+
+margin:auto;
+
+background:white;
+
+border:6px solid #0b2f8a;
+
+padding:14px;
+
+}
+
+/* HEADER */
+
+.receipt-header{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:12px;
+
+}
+
+.logo{
+width:95px;
+}
+
+.title-section{
+flex:1;
+text-align:center;
+}
+
+.title-section h1{
+font-size:38px;
+color:#0b2f8a;
+line-height:1.2;
+font-weight:bold;
+}
+
+.title-section h2{
+font-size:18px;
+margin-top:5px;
+}
+
+.title-section p{
+font-size:14px;
+margin-top:4px;
+}
+
+.receipt-info{
+width:190px;
+border:2px solid #0b2f8a;
+border-radius:8px;
+overflow:hidden;
+}
+
+.receipt-info div{
+display:flex;
+justify-content:space-between;
+padding:8px;
+border-bottom:1px solid #0b2f8a;
+font-size:12px;
+}
+
+.receipt-info div:last-child{
+border-bottom:none;
+}
+
+.receipt-title{
+
+margin-top:12px;
+
+background:#0b2f8a;
+
+color:white;
+
+padding:8px;
+
+font-size:24px;
+
+font-weight:bold;
+
+text-align:center;
+
+border-radius:8px;
+
+}
+
+.sections{
+
+display:grid;
+
+grid-template-columns:1fr 1fr;
+
+gap:12px;
+
+margin-top:12px;
+
+}
+
+.section{
+
+border:2px solid #0b2f8a;
+
+border-radius:8px;
+
+overflow:hidden;
+
+}
+
+.section-title{
+
+background:#0b2f8a;
+
+color:white;
+
+padding:8px;
+
+font-size:16px;
+
+font-weight:bold;
+
+text-align:center;
+
+}
+
+.row{
+
+display:flex;
+
+border-bottom:1px solid #ccc;
+
+}
+
+.row:last-child{
+border-bottom:none;
+}
+
+.label{
+
+width:40%;
+
+padding:8px;
+
+font-size:12px;
+
+font-weight:bold;
+
+background:#f8f8f8;
+
+border-right:1px solid #ccc;
+
+}
+
+.value{
+
+flex:1;
+
+padding:8px;
+
+font-size:12px;
+
+}
+
+.amount-box{
+
+margin-top:12px;
+
+display:flex;
+
+align-items:center;
+
+border:2px solid #0b2f8a;
+
+border-radius:8px;
+
+overflow:hidden;
+
+}
+
+.amount-title{
+
+background:#0b2f8a;
+
+color:white;
+
+padding:10px;
+
+font-size:16px;
+
+font-weight:bold;
+
+width:35%;
+
+}
+
+.amount-value{
+
+flex:1;
+
+padding:10px;
+
+font-size:28px;
+
+font-weight:bold;
+
+color:#0b2f8a;
+
+}
+
+.note{
+
+margin-top:12px;
+
+font-size:11px;
+
+line-height:1.5;
+
+}
+
+.footer{
+
+margin-top:12px;
+
+background:#0b2f8a;
+
+color:white;
+
+padding:8px;
+
+font-size:12px;
+
+font-weight:bold;
+
+text-align:center;
+
+}
+
+.download-btn{
+display:none !important;
+}
+
+@page{
+size:A4 landscape;
+margin:5mm;
+}
+
+</style>
+
+`
+
+printWindow.document.open()
+
+printWindow.document.write(`
+
+<html>
+
+<head>
+
+<title>Membership Receipt</title>
+
+${style}
+
+</head>
+
+<body>
+
+${receiptHTML}
+
+</body>
+
+</html>
+
+`)
+
+printWindow.document.close()
+
+setTimeout(() => {
+
+printWindow.focus()
+
+printWindow.print()
+
+}, 500)
+
+}
+
+</script>
+
+</body>
+</html>
