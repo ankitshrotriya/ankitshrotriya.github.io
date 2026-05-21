@@ -820,21 +820,308 @@ Download / Print Receipt
 })
 
 /* =========================
-DOWNLOAD
+DOWNLOAD FUNCTION
 ========================= */
 
 window.downloadReceipt = function(){
 
 const receiptHTML =
-document.querySelector(
-'.receipt-box'
-).outerHTML
+document.querySelector('.receipt-box').outerHTML
 
 const printWindow = window.open(
 '',
 '_blank',
 'width=1400,height=900'
 )
+
+const style = `
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Arial,sans-serif;
+background:white;
+padding:10px;
+}
+
+/* RECEIPT */
+
+.receipt-box{
+
+width:100%;
+max-width:1100px;
+
+margin:auto;
+
+background:white;
+
+border:6px solid #0b2f8a;
+
+padding:14px;
+
+}
+
+/* HEADER */
+
+.receipt-header{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:12px;
+
+}
+
+.logo{
+width:95px;
+}
+
+.title-section{
+flex:1;
+text-align:center;
+}
+
+.title-section h1{
+font-size:38px;
+color:#0b2f8a;
+line-height:1.2;
+font-weight:bold;
+}
+
+.title-section h2{
+font-size:18px;
+margin-top:5px;
+}
+
+.title-section p{
+font-size:14px;
+margin-top:4px;
+}
+
+.receipt-info{
+width:190px;
+border:2px solid #0b2f8a;
+border-radius:8px;
+overflow:hidden;
+}
+
+.receipt-info div{
+display:flex;
+justify-content:space-between;
+padding:8px;
+border-bottom:1px solid #0b2f8a;
+font-size:12px;
+}
+
+.receipt-info div:last-child{
+border-bottom:none;
+}
+
+.receipt-title{
+
+margin-top:12px;
+
+background:#0b2f8a;
+
+color:white;
+
+padding:8px;
+
+font-size:24px;
+
+font-weight:bold;
+
+text-align:center;
+
+border-radius:8px;
+
+}
+
+.sections{
+
+display:grid;
+
+grid-template-columns:1fr 1fr;
+
+gap:12px;
+
+margin-top:12px;
+
+}
+
+.section{
+
+border:2px solid #0b2f8a;
+
+border-radius:8px;
+
+overflow:hidden;
+
+}
+
+.section-title{
+
+background:#0b2f8a;
+
+color:white;
+
+padding:8px;
+
+font-size:16px;
+
+font-weight:bold;
+
+text-align:center;
+
+}
+
+.row{
+
+display:flex;
+
+border-bottom:1px solid #ccc;
+
+}
+
+.row:last-child{
+border-bottom:none;
+}
+
+.label{
+
+width:40%;
+
+padding:8px;
+
+font-size:12px;
+
+font-weight:bold;
+
+background:#f8f8f8;
+
+border-right:1px solid #ccc;
+
+}
+
+.value{
+
+flex:1;
+
+padding:8px;
+
+font-size:12px;
+
+}
+
+.amount-box{
+
+margin-top:12px;
+
+display:flex;
+
+align-items:center;
+
+border:2px solid #0b2f8a;
+
+border-radius:8px;
+
+overflow:hidden;
+
+}
+
+.amount-title{
+
+background:#0b2f8a;
+
+color:white;
+
+padding:10px;
+
+font-size:16px;
+
+font-weight:bold;
+
+width:35%;
+
+}
+
+.amount-value{
+
+flex:1;
+
+padding:10px;
+
+font-size:28px;
+
+font-weight:bold;
+
+color:#0b2f8a;
+
+}
+
+.note{
+
+margin-top:12px;
+
+font-size:11px;
+
+line-height:1.5;
+
+}
+
+.footer{
+
+margin-top:12px;
+
+background:#0b2f8a;
+
+color:white;
+
+padding:8px;
+
+font-size:12px;
+
+font-weight:bold;
+
+text-align:center;
+
+}
+
+.download-btn{
+display:none !important;
+}
+
+@media print{
+
+body{
+padding:0;
+margin:0;
+}
+
+.receipt-box{
+width:100%;
+max-width:100%;
+margin:0;
+}
+
+@page{
+size:A4 landscape;
+margin:5mm;
+}
+
+}
+
+</style>
+
+`
+
+printWindow.document.open()
 
 printWindow.document.write(`
 
@@ -844,18 +1131,7 @@ printWindow.document.write(`
 
 <title>Receipt</title>
 
-<style>
-
-body{
-font-family:Arial,sans-serif;
-padding:10px;
-}
-
-.download-btn{
-display:none;
-}
-
-</style>
+${style}
 
 </head>
 
