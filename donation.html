@@ -260,7 +260,7 @@ background:#e66900;
 <a href="gallery.html">Gallery</a>
 <a href="contact.html">Contact</a>
 <a href="registration.html">Registration</a>
-<a href="donation.html" class="donation-btn">Donation</a>
+<a href="donation.html">Donation</a>
 
 </nav>
 
@@ -270,11 +270,7 @@ background:#e66900;
 
 <h1>Donation Form</h1>
 
-<form action="https://api.web3forms.com/submit" method="POST">
-
-<input type="hidden" name="access_key" value="ce2e7089-54a4-45dc-90e9-915f2dbf3c85">
-
-<input type="hidden" name="subject" value="New Donation Received">
+<form id="donationForm">
 
 <div class="section">Donation Details</div>
 
@@ -290,6 +286,35 @@ background:#e66900;
 <input type="text" name="mobile" required>
 </div>
 
+<div class="form-group">
+
+<label>पद</label>
+
+<select name="position" required>
+
+<option value="">
+पद चुनें
+</option>
+
+<option>CGM/CE/ED</option>
+<option>DY DY CGM/ADD CE</option>
+<option>SE</option>
+<option>DE</option>
+<option>AE</option>
+<option>JE</option>
+<option>OA Gr1/2/3</option>
+<option>ARO</option>
+<option>LA</option>
+<option>TA</option>
+<option>METER READER</option>
+<option>OUTSOURCE</option>
+<option>STENOGRAPHER</option>
+<option>OTHER</option>
+
+</select>
+
+</div>
+
 <div class="form-group full">
 <label>Union ID (अगर हो)</label>
 <input type="text" name="union_id">
@@ -297,9 +322,7 @@ background:#e66900;
 
 </div>
 
-<!-- =========================
-PAYMENT SECTION
-========================= -->
+<!-- PAYMENT SECTION -->
 
 <div class="section">Payment</div>
 
@@ -335,9 +358,7 @@ Any Amount
 
 </select>
 
-<!-- =========================
-CUSTOM AMOUNT
-========================= -->
+<!-- CUSTOM AMOUNT -->
 
 <div
 id="customAmountBox"
@@ -354,6 +375,7 @@ Enter Amount
 <input
 type="number"
 id="customAmount"
+name="custom_amount"
 placeholder="Enter Any Amount"
 oninput="generateQR()"
 style="
@@ -367,9 +389,7 @@ margin-top:8px;">
 
 </div>
 
-<!-- =========================
-QR BOX
-========================= -->
+<!-- QR BOX -->
 
 <div
 id="qrBox"
@@ -381,8 +401,7 @@ Scan QR To Pay
 
 </h2>
 
-<img
-id="qrImage">
+<img id="qrImage">
 
 <div
 id="amountText"
@@ -393,7 +412,7 @@ class="amount-box">
 <div class="upi-box">
 
 UPI ID :
-Mpvmtks.82233143@hdfcbank
+9977885049@ibl
 
 </div>
 
@@ -407,9 +426,7 @@ QR स्कैन करते ही राशि अपने आप भर �
 
 </div>
 
-<!-- =========================
-PAYMENT VERIFY
-========================= -->
+<!-- PAYMENT VERIFY -->
 
 <div class="section">Payment Verification</div>
 
@@ -417,13 +434,14 @@ PAYMENT VERIFY
 
 <label>UTR नंबर</label>
 
-<input type="text"
+<input
+type="text"
 name="utr_number"
 required>
 
 </div>
 
-<button type="submit">
+<button type="submit" id="submitBtn">
 
 Donation Submit
 
@@ -433,43 +451,76 @@ Donation Submit
 
 </div>
 
-<script>
+<!-- SUPABASE -->
 
-function generateQR(){
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
-let amount = document.getElementById(
+<script type="module">
+
+import { createClient }
+from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+const supabaseUrl =
+'https://uxdeihxbacsrpxugibqq.supabase.co'
+
+const supabaseKey =
+'sb_publishable_toimxIMSyU-ld7bE-5AjYA_x7CmUh_G'
+
+const supabase = createClient(
+supabaseUrl,
+supabaseKey
+)
+
+/* =========================
+QR GENERATE
+========================= */
+
+window.generateQR = function(){
+
+let amountSelect =
+document.getElementById(
 "donationAmount"
 ).value;
 
-if(amount != ""){
+let customBox =
+document.getElementById(
+"customAmountBox"
+);
 
-// =========================
-// YOUR UPI LINK
-// =========================
+let finalAmount = amountSelect;
+
+if(amountSelect === "custom"){
+
+customBox.style.display = "block";
+
+finalAmount =
+document.getElementById(
+"customAmount"
+).value;
+
+}else{
+
+customBox.style.display = "none";
+
+}
+
+if(finalAmount && finalAmount > 0){
 
 let upiLink =
 
-"upi://pay?pa=Mpvmtks.82233143@hdfcbank"
+"upi://pay?pa=9977885049@ibl"
 
 + "&pn=Donation"
 
-+ "&am=" + amount
++ "&am=" + finalAmount
 
 + "&cu=INR";
-
-// =========================
-// QR GENERATOR
-// =========================
 
 let qrURL =
 
 "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="
 
 + encodeURIComponent(upiLink);
-
-// =========================
-// SHOW QR
-// =========================
 
 document.getElementById(
 "qrImage"
@@ -479,15 +530,13 @@ document.getElementById(
 "amountText"
 ).innerHTML =
 
-"Amount : ₹" + amount;
+"Amount : ₹" + finalAmount;
 
 document.getElementById(
 "qrBox"
 ).style.display = "block";
 
-}
-
-else{
+}else{
 
 document.getElementById(
 "qrBox"
@@ -496,6 +545,219 @@ document.getElementById(
 }
 
 }
+
+/* =========================
+AUTO RECEIPT NUMBER
+========================= */
+
+function generateReceiptNumber(){
+
+return 'RCPT-' +
+
+Math.floor(
+100000 + Math.random() * 900000
+)
+
+}
+
+/* =========================
+AUTO INVOICE NUMBER
+========================= */
+
+function generateInvoiceNumber(){
+
+return 'INV-' +
+
+new Date().getFullYear()
+
++ '-' +
+
+Math.floor(
+1000 + Math.random() * 9000
+)
+
+}
+
+/* =========================
+FORM SUBMIT
+========================= */
+
+const form =
+document.getElementById('donationForm')
+
+const submitBtn =
+document.getElementById('submitBtn')
+
+form.addEventListener(
+'submit',
+async function(e){
+
+e.preventDefault()
+
+submitBtn.disabled = true
+
+submitBtn.innerHTML = 'Processing...'
+
+const formData =
+new FormData(form)
+
+const utr =
+formData.get('utr_number')
+
+/* =========================
+DUPLICATE UTR CHECK
+========================= */
+
+const { data: utrCheck }
+= await supabase
+
+.from('donation')
+
+.select('id')
+
+.eq('utr_number', utr)
+
+if(utrCheck.length > 0){
+
+alert('UTR Number Already Used')
+
+submitBtn.disabled = false
+
+submitBtn.innerHTML =
+'Donation Submit'
+
+return
+
+}
+
+/* =========================
+FINAL AMOUNT
+========================= */
+
+let donationAmount =
+formData.get('donation_amount')
+
+let customAmount =
+formData.get('custom_amount')
+
+let finalAmount = ''
+
+if(donationAmount == 'custom'){
+
+finalAmount = customAmount
+
+}else{
+
+finalAmount = donationAmount
+
+}
+
+/* =========================
+AUTO GENERATED VALUES
+========================= */
+
+const receiptNumber =
+generateReceiptNumber()
+
+const invoiceNumber =
+generateInvoiceNumber()
+
+/* =========================
+INSERT DATA
+========================= */
+
+const data = {
+
+receipt_number:
+receiptNumber,
+
+invoice_number:
+invoiceNumber,
+
+name:
+formData.get('name'),
+
+mobile:
+formData.get('mobile'),
+
+position:
+formData.get('position'),
+
+union_id:
+formData.get('union_id'),
+
+donation_amount:
+donationAmount,
+
+custom_amount:
+customAmount,
+
+final_amount:
+finalAmount,
+
+utr_number:
+utr,
+
+payment_status:
+null
+
+}
+
+/* =========================
+SAVE DATA
+========================= */
+
+const { error } =
+await supabase
+
+.from('donation')
+
+.insert([data])
+
+if(error){
+
+alert(
+'Error : ' + error.message
+)
+
+}else{
+
+alert(
+
+'Donation Submitted Successfully'
+
++ '\n\n'
+
++ 'Receipt Number : '
+
++ receiptNumber
+
++ '\n\n'
+
++ 'Invoice Number : '
+
++ invoiceNumber
+
+)
+
+form.reset()
+
+document.getElementById(
+"qrBox"
+).style.display = "none"
+
+}
+
+/* =========================
+RESET BUTTON
+========================= */
+
+submitBtn.disabled = false
+
+submitBtn.innerHTML =
+'Donation Submit'
+
+})
 
 </script>
 
