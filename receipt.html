@@ -8,7 +8,7 @@
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Membership Receipt</title>
+<title>Receipt Generator</title>
 
 <style>
 
@@ -42,7 +42,8 @@ color:#0b2f8a;
 margin-bottom:20px;
 }
 
-input{
+input,
+select{
 width:100%;
 padding:12px;
 border:1px solid #ccc;
@@ -390,6 +391,18 @@ margin:5mm;
 
 <h2>Generate Receipt</h2>
 
+<select id="receiptType">
+
+<option value="membership">
+Membership Receipt
+</option>
+
+<option value="donation">
+Donation Receipt
+</option>
+
+</select>
+
 <input
 type="text"
 id="mobile"
@@ -428,29 +441,17 @@ return date.toLocaleString('en-IN')
 
 }
 
-function generateReceiptNumber(){
-
-return Math.floor(
-100000 + Math.random() * 900000
-).toString()
-
-}
-
-function generateInvoiceNumber(){
-
-return 'INV/' +
-new Date().getFullYear() +
-'/' +
-Math.floor(Math.random() * 10000)
-
-}
-
 document
 .getElementById('generateBtn')
 .addEventListener('click', async function(){
 
 const mobile =
 document.getElementById('mobile').value.trim()
+
+const receiptType =
+document.getElementById(
+'receiptType'
+).value
 
 if(!mobile){
 
@@ -459,11 +460,34 @@ return
 
 }
 
+let tableName = ''
+
+if(receiptType === 'membership'){
+
+tableName =
+'membership_registration'
+
+}else{
+
+tableName =
+'donation'
+
+}
+
+/* =========================
+FETCH DATA
+========================= */
+
 const { data, error } = await supabase
-.from('membership_registration')
+
+.from(tableName)
+
 .select('*')
+
 .eq('mobile', mobile)
+
 .eq('payment_status', true)
+
 .limit(1)
 
 if(error){
@@ -475,58 +499,22 @@ return
 
 if(!data || data.length === 0){
 
-alert('Approved Member Not Found')
+alert('Approved Record Not Found')
 return
 
 }
 
 const member = data[0]
 
-/* EXISTING OR NEW */
+member.receipt_type = receiptType
 
-let receiptNumber =
-member.receipt_number
+document.getElementById(
+'receipt'
+).style.display='block'
 
-let invoiceNumber =
-member.invoice_number
-
-if(!receiptNumber){
-
-receiptNumber =
-generateReceiptNumber()
-
-}
-
-if(!invoiceNumber){
-
-invoiceNumber =
-generateInvoiceNumber()
-
-}
-
-/* SAVE */
-
-if(
-!member.receipt_number ||
-!member.invoice_number
-){
-
-await supabase
-.from('membership_registration')
-.update({
-
-receipt_number: receiptNumber,
-
-invoice_number: invoiceNumber
-
-})
-.eq('id', member.id)
-
-}
-
-document.getElementById('receipt').style.display='block'
-
-document.getElementById('receipt').innerHTML = `
+document.getElementById(
+'receipt'
+).innerHTML = `
 
 <div class="receipt-box">
 
@@ -549,7 +537,7 @@ class="logo"
 
 <p>
 मुख्य कार्यालय:
-एफ-11, विद्युत नगर,
+एम-11, विद्युत नगर,
 रामपुर, जबलपुर – 482008
 </p>
 
@@ -559,21 +547,29 @@ class="logo"
 
 <div>
 <span>रसीद क्रमांक</span>
-<strong>${receiptNumber}</strong>
+
+<strong>
+${member.receipt_number || ''}
+</strong>
+
 </div>
 
 <div>
 <span>दिनांक</span>
+
 <strong>
 ${formatDate(member.created_at)}
 </strong>
+
 </div>
 
 <div>
 <span>पद</span>
+
 <strong>
 ${member.position || ''}
 </strong>
+
 </div>
 
 </div>
@@ -589,83 +585,181 @@ ${member.position || ''}
 <div class="section">
 
 <div class="section-title">
-सदस्य विवरण / MEMBER DETAILS
+
+${receiptType === 'donation'
+
+? 'DONATION DETAILS'
+
+: 'MEMBER DETAILS'}
+
 </div>
 
 <div class="row">
-<div class="label">सदस्य का नाम</div>
-<div class="value">${member.name || ''}</div>
+<div class="label">नाम</div>
+
+<div class="value">
+${member.name || ''}
 </div>
 
-<div class="row">
-<div class="label">पिता / पति का नाम</div>
-<div class="value">${member.father_name || ''}</div>
-</div>
-
-<div class="row">
-<div class="label">कंपनी / विभाग</div>
-<div class="value">${member.company_name || ''}</div>
 </div>
 
 <div class="row">
 <div class="label">मोबाइल नंबर</div>
-<div class="value">${member.mobile || ''}</div>
+
+<div class="value">
+${member.mobile || ''}
+</div>
+
+</div>
+
+<div class="row">
+<div class="label">पद</div>
+
+<div class="value">
+${member.position || ''}
+</div>
+
+</div>
+
+<div class="row">
+<div class="label">UTR नंबर</div>
+
+<div class="value">
+${member.utr_number || ''}
+</div>
+
+</div>
+
+${receiptType === 'membership'
+
+? `
+
+<div class="row">
+<div class="label">कंपनी</div>
+
+<div class="value">
+${member.company_name || ''}
+</div>
+
 </div>
 
 <div class="row">
 <div class="label">कार्यालय</div>
-<div class="value">${member.office_name || ''}</div>
+
+<div class="value">
+${member.office_name || ''}
+</div>
+
 </div>
 
 <div class="row">
 <div class="label">ईमेल</div>
-<div class="value">${member.email || ''}</div>
+
+<div class="value">
+${member.email || ''}
 </div>
+
+</div>
+
+`
+
+: `
+
+<div class="row">
+<div class="label">Union ID</div>
+
+<div class="value">
+${member.union_id || ''}
+</div>
+
+</div>
+
+`
+
+}
 
 </div>
 
 <div class="section">
 
 <div class="section-title">
-भुगतान विवरण / PAYMENT DETAILS
+PAYMENT DETAILS
 </div>
 
 <div class="row">
-<div class="label">सदस्यता शुल्क</div>
-<div class="value">Membership Fee</div>
+
+<div class="label">
+भुगतान प्रकार
 </div>
 
-<div class="row">
-<div class="label">सदस्यता शुल्क राशि</div>
 <div class="value">
-₹${member.membership_fee || ''}
+
+${receiptType === 'donation'
+
+? 'Donation'
+
+: 'Membership Fee'}
+
 </div>
+
 </div>
 
 <div class="row">
-<div class="label">भुगतान का प्रकार</div>
-<div class="value">Online Payment</div>
+
+<div class="label">
+भुगतान राशि
 </div>
 
-<div class="row">
-<div class="label">UTR नंबर</div>
 <div class="value">
-${member.utr_number || ''}
+
+₹${
+
+receiptType === 'donation'
+
+? member.final_amount || ''
+
+: member.membership_fee || ''
+
+}
+
 </div>
+
 </div>
 
 <div class="row">
-<div class="label">भुगतान की दिनांक</div>
+
+<div class="label">
+भुगतान माध्यम
+</div>
+
+<div class="value">
+Online Payment
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="label">
+इनवॉइस नंबर
+</div>
+
+<div class="value">
+${member.invoice_number || ''}
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="label">
+भुगतान दिनांक
+</div>
+
 <div class="value">
 ${formatDate(member.created_at)}
 </div>
-</div>
 
-<div class="row">
-<div class="label">इनवॉइस नंबर</div>
-<div class="value">
-${invoiceNumber}
-</div>
 </div>
 
 </div>
@@ -679,18 +773,28 @@ ${invoiceNumber}
 </div>
 
 <div class="amount-value">
-₹ ${member.membership_fee || ''}
+
+₹ ${
+
+receiptType === 'donation'
+
+? member.final_amount || ''
+
+: member.membership_fee || ''
+
+}
+
 </div>
 
 </div>
 
 <div class="note">
 
-• यह रसीद केवल सदस्यता शुल्क प्राप्ति हेतु मान्य है।<br>
+• यह कंप्यूटर जनित रसीद है।<br>
 
-• यह कंप्यूटर जनित रसीद है। हस्ताक्षर की आवश्यकता नहीं है।<br>
+• हस्ताक्षर की आवश्यकता नहीं है।<br>
 
-• किसी भी प्रकार की जानकारी हेतु कार्यालय से संपर्क करें。
+• किसी भी जानकारी हेतु कार्यालय से संपर्क करें।
 
 </div>
 
@@ -714,12 +818,17 @@ Download / Print Receipt
 `
 
 })
-/* DOWNLOAD FUNCTION */
+
+/* =========================
+DOWNLOAD
+========================= */
 
 window.downloadReceipt = function(){
 
 const receiptHTML =
-document.querySelector('.receipt-box').outerHTML
+document.querySelector(
+'.receipt-box'
+).outerHTML
 
 const printWindow = window.open(
 '',
@@ -727,289 +836,26 @@ const printWindow = window.open(
 'width=1400,height=900'
 )
 
-const style = `
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
-body{
-font-family:Arial,sans-serif;
-background:white;
-padding:10px;
-}
-
-/* RECEIPT */
-
-.receipt-box{
-
-width:100%;
-max-width:1100px;
-
-margin:auto;
-
-background:white;
-
-border:6px solid #0b2f8a;
-
-padding:14px;
-
-}
-
-/* HEADER */
-
-.receipt-header{
-
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:12px;
-
-}
-
-.logo{
-width:95px;
-}
-
-.title-section{
-flex:1;
-text-align:center;
-}
-
-.title-section h1{
-font-size:38px;
-color:#0b2f8a;
-line-height:1.2;
-font-weight:bold;
-}
-
-.title-section h2{
-font-size:18px;
-margin-top:5px;
-}
-
-.title-section p{
-font-size:14px;
-margin-top:4px;
-}
-
-.receipt-info{
-width:190px;
-border:2px solid #0b2f8a;
-border-radius:8px;
-overflow:hidden;
-}
-
-.receipt-info div{
-display:flex;
-justify-content:space-between;
-padding:8px;
-border-bottom:1px solid #0b2f8a;
-font-size:12px;
-}
-
-.receipt-info div:last-child{
-border-bottom:none;
-}
-
-.receipt-title{
-
-margin-top:12px;
-
-background:#0b2f8a;
-
-color:white;
-
-padding:8px;
-
-font-size:24px;
-
-font-weight:bold;
-
-text-align:center;
-
-border-radius:8px;
-
-}
-
-.sections{
-
-display:grid;
-
-grid-template-columns:1fr 1fr;
-
-gap:12px;
-
-margin-top:12px;
-
-}
-
-.section{
-
-border:2px solid #0b2f8a;
-
-border-radius:8px;
-
-overflow:hidden;
-
-}
-
-.section-title{
-
-background:#0b2f8a;
-
-color:white;
-
-padding:8px;
-
-font-size:16px;
-
-font-weight:bold;
-
-text-align:center;
-
-}
-
-.row{
-
-display:flex;
-
-border-bottom:1px solid #ccc;
-
-}
-
-.row:last-child{
-border-bottom:none;
-}
-
-.label{
-
-width:40%;
-
-padding:8px;
-
-font-size:12px;
-
-font-weight:bold;
-
-background:#f8f8f8;
-
-border-right:1px solid #ccc;
-
-}
-
-.value{
-
-flex:1;
-
-padding:8px;
-
-font-size:12px;
-
-}
-
-.amount-box{
-
-margin-top:12px;
-
-display:flex;
-
-align-items:center;
-
-border:2px solid #0b2f8a;
-
-border-radius:8px;
-
-overflow:hidden;
-
-}
-
-.amount-title{
-
-background:#0b2f8a;
-
-color:white;
-
-padding:10px;
-
-font-size:16px;
-
-font-weight:bold;
-
-width:35%;
-
-}
-
-.amount-value{
-
-flex:1;
-
-padding:10px;
-
-font-size:28px;
-
-font-weight:bold;
-
-color:#0b2f8a;
-
-}
-
-.note{
-
-margin-top:12px;
-
-font-size:11px;
-
-line-height:1.5;
-
-}
-
-.footer{
-
-margin-top:12px;
-
-background:#0b2f8a;
-
-color:white;
-
-padding:8px;
-
-font-size:12px;
-
-font-weight:bold;
-
-text-align:center;
-
-}
-
-.download-btn{
-display:none !important;
-}
-
-@page{
-size:A4 landscape;
-margin:5mm;
-}
-
-</style>
-
-`
-
-printWindow.document.open()
-
 printWindow.document.write(`
 
 <html>
 
 <head>
 
-<title>Membership Receipt</title>
+<title>Receipt</title>
 
-${style}
+<style>
+
+body{
+font-family:Arial,sans-serif;
+padding:10px;
+}
+
+.download-btn{
+display:none;
+}
+
+</style>
 
 </head>
 
