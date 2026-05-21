@@ -84,6 +84,29 @@ margin-bottom:20px;
 font-size:24px;
 }
 
+/* TOP BUTTONS */
+
+.top-buttons{
+display:flex;
+justify-content:center;
+gap:10px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.top-buttons button{
+background:#ff7a00;
+color:white;
+border:none;
+padding:12px 18px;
+border-radius:8px;
+cursor:pointer;
+font-size:14px;
+font-weight:bold;
+}
+
+/* LOADER */
+
 .loader{
 text-align:center;
 font-size:20px;
@@ -221,7 +244,21 @@ Login
 
 <div id="mainContent">
 
-<h1>Membership Registration Report</h1>
+<h1 id="pageTitle">
+Membership Registration Report
+</h1>
+
+<div class="top-buttons">
+
+<button onclick="loadMembership()">
+Membership Records
+</button>
+
+<button onclick="loadDonation()">
+Donation Records
+</button>
+
+</div>
 
 <div class="loader" id="loader">
 Loading Data...
@@ -243,9 +280,13 @@ document.getElementById("passwordInput").value
 
 if(enteredPassword === password){
 
-document.getElementById("passwordScreen").style.display = "none"
+document.getElementById(
+"passwordScreen"
+).style.display = "none"
 
-document.getElementById("mainContent").style.display = "block"
+document.getElementById(
+"mainContent"
+).style.display = "block"
 
 }else{
 
@@ -273,12 +314,35 @@ supabaseUrl,
 supabaseKey
 )
 
-async function loadData(){
+/* =========================
+LOAD MEMBERSHIP
+========================= */
+
+window.loadMembership =
+async function(){
+
+document.getElementById(
+'pageTitle'
+).innerHTML =
+'Membership Registration Report'
+
+document.getElementById(
+'loader'
+).style.display = 'block'
+
+const mobileCards =
+document.getElementById('mobileCards')
+
+mobileCards.innerHTML = ''
 
 const { data, error } = await supabase
+
 .from('membership_registration')
+
 .select('*')
+
 .is('payment_status', null)
+
 .order('id', { ascending:false })
 
 console.log(data)
@@ -291,17 +355,12 @@ return
 
 }
 
-const mobileCards =
-document.getElementById('mobileCards')
-
-mobileCards.innerHTML = ''
-
 if(data.length === 0){
 
 mobileCards.innerHTML = `
 
 <div class="card">
-No Data Found
+No Membership Data Found
 </div>
 
 `
@@ -410,7 +469,7 @@ ${statusText}
 
 <button
 class="approve-btn"
-onclick="updateStatus(${item.id}, true)"
+onclick="updateMembershipStatus(${item.id}, true)"
 >
 
 Approve
@@ -419,7 +478,7 @@ Approve
 
 <button
 class="reject-btn"
-onclick="updateStatus(${item.id}, false)"
+onclick="updateMembershipStatus(${item.id}, false)"
 >
 
 Reject
@@ -434,7 +493,178 @@ Reject
 
 }
 
-window.updateStatus = async function(id, status){
+document.getElementById(
+'loader'
+).style.display='none'
+
+}
+
+/* =========================
+LOAD DONATION
+========================= */
+
+window.loadDonation =
+async function(){
+
+document.getElementById(
+'pageTitle'
+).innerHTML =
+'Donation Report'
+
+document.getElementById(
+'loader'
+).style.display = 'block'
+
+const mobileCards =
+document.getElementById('mobileCards')
+
+mobileCards.innerHTML = ''
+
+const { data, error } = await supabase
+
+.from('donation')
+
+.select('*')
+
+.is('payment_status', null)
+
+.order('id', { ascending:false })
+
+console.log(data)
+console.log(error)
+
+if(error){
+
+alert(error.message)
+return
+
+}
+
+if(data.length === 0){
+
+mobileCards.innerHTML = `
+
+<div class="card">
+No Donation Data Found
+</div>
+
+`
+
+}
+
+for(let item of data){
+
+let statusText = 'Pending'
+let statusClass = 'status-pending'
+
+if(item.payment_status === true){
+
+statusText = 'Approved'
+statusClass = 'status-approved'
+
+}
+
+if(item.payment_status === false){
+
+statusText = 'Rejected'
+statusClass = 'status-rejected'
+
+}
+
+mobileCards.innerHTML += `
+
+<div class="card">
+
+<h3>${item.name || ''}</h3>
+
+<p>
+<strong>ID:</strong>
+${item.id}
+</p>
+
+<p>
+<strong>Receipt Number:</strong>
+${item.receipt_number || ''}
+</p>
+
+<p>
+<strong>Invoice Number:</strong>
+${item.invoice_number || ''}
+</p>
+
+<p>
+<strong>Mobile:</strong>
+${item.mobile || ''}
+</p>
+
+<p>
+<strong>Position:</strong>
+${item.position || ''}
+</p>
+
+<p>
+<strong>Union ID:</strong>
+${item.union_id || ''}
+</p>
+
+<p>
+<strong>Donation Amount:</strong>
+₹${item.final_amount || ''}
+</p>
+
+<p>
+<strong>UTR:</strong>
+${item.utr_number || ''}
+</p>
+
+<p class="${statusClass}">
+
+<strong>Status:</strong>
+
+${statusText}
+
+</p>
+
+<div class="action-buttons">
+
+<button
+class="approve-btn"
+onclick="updateDonationStatus(${item.id}, true)"
+>
+
+Approve
+
+</button>
+
+<button
+class="reject-btn"
+onclick="updateDonationStatus(${item.id}, false)"
+>
+
+Reject
+
+</button>
+
+</div>
+
+</div>
+
+`
+
+}
+
+document.getElementById(
+'loader'
+).style.display='none'
+
+}
+
+/* =========================
+UPDATE MEMBERSHIP STATUS
+========================= */
+
+window.updateMembershipStatus =
+async function(id, status){
 
 let confirmMsg = status
 ? 'Approve this payment?'
@@ -443,8 +673,13 @@ let confirmMsg = status
 if(!confirm(confirmMsg)) return
 
 const { error } = await supabase
+
 .from('membership_registration')
-.update({ payment_status: status })
+
+.update({
+payment_status: status
+})
+
 .eq('id', id)
 
 if(error){
@@ -455,17 +690,54 @@ alert(error.message)
 
 alert('Status Updated Successfully')
 
-loadData()
+loadMembership()
 
 }
 
 }
 
-document.getElementById('loader').style.display='none'
+/* =========================
+UPDATE DONATION STATUS
+========================= */
+
+window.updateDonationStatus =
+async function(id, status){
+
+let confirmMsg = status
+? 'Approve this donation?'
+: 'Reject this donation?'
+
+if(!confirm(confirmMsg)) return
+
+const { error } = await supabase
+
+.from('donation')
+
+.update({
+payment_status: status
+})
+
+.eq('id', id)
+
+if(error){
+
+alert(error.message)
+
+}else{
+
+alert('Donation Status Updated Successfully')
+
+loadDonation()
 
 }
 
-loadData()
+}
+
+/* =========================
+DEFAULT LOAD
+========================= */
+
+loadMembership()
 
 </script>
 
