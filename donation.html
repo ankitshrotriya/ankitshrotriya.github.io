@@ -622,7 +622,11 @@ formData.get('utr_number')
 DUPLICATE UTR CHECK
 ========================= */
 
-const { data: utrCheck }
+/* =========================
+CHECK UTR IN DONATION
+========================= */
+
+const { data: donationUTR }
 = await supabase
 
 .from('donation')
@@ -631,7 +635,30 @@ const { data: utrCheck }
 
 .eq('utr_number', utr)
 
-if(utrCheck.length > 0){
+/* =========================
+CHECK UTR IN MEMBERSHIP
+========================= */
+
+const { data: membershipUTR }
+= await supabase
+
+.from('membership_registration')
+
+.select('id')
+
+.eq('utr_number', utr)
+
+/* =========================
+DUPLICATE CHECK
+========================= */
+
+if(
+
+donationUTR.length > 0 ||
+
+membershipUTR.length > 0
+
+){
 
 alert('UTR Number Already Used')
 
