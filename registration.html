@@ -613,28 +613,55 @@ const { data: mobileCheck } = await supabase
 
 // UTR CHECK
 
-const { data: utrCheck } = await supabase
+
+/* =========================
+CHECK UTR IN MEMBERSHIP
+========================= */
+
+const { data: membershipUTR } = await supabase
+
 .from('membership_registration')
+
 .select('id')
+
 .eq('utr_number', utr)
 
-if(mobileCheck.length > 0){
+/* =========================
+CHECK UTR IN DONATION
+========================= */
 
-alert('Mobile number already registered')
+const { data: donationUTR } = await supabase
 
-submitBtn.disabled = false
-submitBtn.innerHTML = 'पंजीकरण सबमिट करें'
+.from('donation')
 
-return
+.select('id')
 
-}
+.eq('utr_number', utr)
 
-if(utrCheck.length > 0){
+console.log("Checking UTR =", utr)
+
+console.log("Membership UTR =", membershipUTR)
+
+console.log("Donation UTR =", donationUTR)
+
+/* =========================
+DUPLICATE CHECK
+========================= */
+
+if(
+
+membershipUTR.length > 0 ||
+
+donationUTR.length > 0
+
+){
 
 alert('UTR Number already used')
 
 submitBtn.disabled = false
-submitBtn.innerHTML = 'पंजीकरण सबमिट करें'
+
+submitBtn.innerHTML =
+'पंजीकरण सबमिट करें'
 
 return
 
