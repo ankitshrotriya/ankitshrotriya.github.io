@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Premium Certificate</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+
+font-family:Arial,sans-serif;
+
+background:#efefef;
+
+padding:20px;
+
+}
+
+/* SEARCH BOX */
+
+.search-box{
+
+max-width:450px;
+
+margin:auto;
+
+background:white;
+
+padding:25px;
+
+border-radius:14px;
+
+box-shadow:0 5px 15px rgba(0,0,0,0.15);
+
+margin-bottom:20px;
+
+}
+
+.search-box h2{
+
+text-align:center;
+
+margin-bottom:20px;
+
+color:#7a0000;
+
+font-size:32px;
+
+}
+
+input{
+
+width:100%;
+
+padding:14px;
+
+border:1px solid #ccc;
+
+border-radius:10px;
+
+font-size:16px;
+
+margin-bottom:15px;
+
+}
+
+button{
+
+width:100%;
+
+padding:14px;
+
+border:none;
+
+background:#7a0000;
+
+color:white;
+
+font-size:18px;
+
+border-radius:10px;
+
+cursor:pointer;
+
+font-weight:bold;
+
+}
+
+#certificateBox{
+
+display:none;
+
+margin-top:20px;
+
+text-align:center;
+
+}
+
+canvas{
+
+max-width:100%;
+
+border-radius:10px;
+
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+
+}
+
+.download-btn{
+
+max-width:500px;
+
+margin:25px auto 0;
+
+display:block;
+
+background:green;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="search-box">
+
+<h2>
+Download Certificate
+</h2>
+
+<input
+type="text"
+id="mobile"
+placeholder="Enter Mobile Number"
+>
+
+<button onclick="generateCertificate()">
+Generate Certificate
+</button>
+
+</div>
+
+<div id="certificateBox">
+
+<canvas
+id="certificateCanvas"
+width="1536"
+height="1086">
+</canvas>
+
+<button
+class="download-btn"
+onclick="downloadCertificate()"
+>
+
+Download Certificate
+
+</button>
+
+</div>
+
+<script type="module">
+
+import { createClient }
+from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+const supabaseUrl =
+'https://uxdeihxbacsrpxugibqq.supabase.co'
+
+const supabaseKey =
+'sb_publishable_toimxIMSyU-ld7bE-5AjYA_x7CmUh_G'
+
+const supabase = createClient(
+supabaseUrl,
+supabaseKey
+)
+
+function formatDate(dateString){
+
+const date = new Date(dateString)
+
+return date.toLocaleDateString(
+'en-GB',
+{
+day:'2-digit',
+month:'short',
+year:'numeric'
+}
+)
+
+}
+
+function generateRegistrationNumber(id){
+
+const year =
+new Date().getFullYear()
+
+const code =
+String(id).padStart(5,'0')
+
+return `MPVMTKS/${year}/${code}`
+
+}
+
+/* =========================
+AUTO FONT SIZE
+========================= */
+
+function fitText(
+ctx,
+text,
+maxWidth,
+startSize
+){
+
+let size = startSize
+
+while(size > 20){
+
+ctx.font =
+`bold ${size}px Arial`
+
+if(
+ctx.measureText(text).width
+<= maxWidth
+){
+return size
+}
+
+size--
+
+}
+
+return 20
+
+}
+
+/* =========================
+GENERATE CERTIFICATE
+========================= */
+
+window.generateCertificate =
+async function(){
+
+const mobile =
+document.getElementById(
+'mobile'
+).value.trim()
+
+if(!mobile){
+
+alert('Enter Mobile Number')
+return
+
+}
+
+const { data, error } = await supabase
+
+.from('membership_registration')
+
+.select('*')
+
+.eq('mobile', mobile)
+
+.eq('payment_status', true)
+
+.limit(1)
+
+if(error){
+
+alert(error.message)
+return
+
+}
+
+if(!data || data.length === 0){
+
+alert('Approved Member Not Found')
+return
+
+}
+
+const member = data[0]
+
+let registrationNumber =
+member.registration_number
+
+if(!registrationNumber){
+
+registrationNumber =
+generateRegistrationNumber(
+member.id
+)
+
+await supabase
+
+.from('membership_registration')
+
+.update({
+
+registration_number:
+registrationNumber
+
+})
+
+.eq('id', member.id)
+
+}
+
+/* =========================
+CANVAS
+========================= */
+
+const canvas =
+document.getElementById(
+'certificateCanvas'
+)
+
+const ctx =
+canvas.getContext('2d')
+
+const bg = new Image()
+
+bg.src =
+'images/certificate-bg.png'
+
+bg.onload = function(){
+
+/* DRAW BG */
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+)
+
+ctx.drawImage(
+bg,
+0,
+0,
+canvas.width,
+canvas.height
+)
+
+/* =========================
+REG NUMBER
+========================= */
+
+ctx.fillStyle = '#111'
+
+ctx.font = 'bold 20px Arial'
+
+ctx.textAlign = 'left'
+
+ctx.fillText(
+registrationNumber,
+115,
+460
+)
+
+/* =========================
+DATE
+========================= */
+
+ctx.fillText(
+formatDate(member.created_at),
+145,
+550
+)
+
+/* =========================
+POSITION
+========================= */
+
+ctx.fillText(
+member.position || '',
+145,
+750
+)
+
+/* =========================
+NAME
+========================= */
+
+ctx.textAlign = 'center'
+
+const fontSize = fitText(
+ctx,
+member.name || '',
+500,
+78
+)
+
+ctx.font =
+`bold ${fontSize}px Arial`
+
+ctx.fillStyle = '#0b2f8a'
+
+ctx.fillText(
+member.name || '',
+770,
+590
+)
+
+document.getElementById(
+'certificateBox'
+).style.display='block'
+
+}
+
+}
+
+/* =========================
+DOWNLOAD
+========================= */
+
+window.downloadCertificate =
+function(){
+
+const canvas =
+document.getElementById(
+'certificateCanvas'
+)
+
+const link =
+document.createElement('a')
+
+link.download =
+'certificate.png'
+
+link.href =
+canvas.toDataURL()
+
+link.click()
+
+}
+
+</script>
+
+</body>
+</html>
