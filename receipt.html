@@ -506,6 +506,35 @@ return
 
 const member = data[0]
 
+/* =========================
+AUTO GENERATE RECEIPT/INVOICE
+========================= */
+
+if (!member.receipt_number || !member.invoice_number) {
+
+    const receiptNo =
+        'R' + Math.floor(100000 + Math.random() * 900000)
+
+    const invoiceNo =
+        'INV/2026/' + new Date().getFullYear() + '/' +
+        Math.floor(1000 + Math.random() * 9000)
+
+    const { error: updateError } = await supabase
+        .from(tableName)
+        .update({
+            receipt_number: receiptNo,
+            invoice_number: invoiceNo
+        })
+        .eq('id', member.id)
+
+    if(updateError){
+        alert(updateError.message)
+        return
+    }
+
+    member.receipt_number = receiptNo
+    member.invoice_number = invoiceNo
+}
 member.receipt_type = receiptType
 
 document.getElementById(
