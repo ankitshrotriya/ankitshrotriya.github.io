@@ -15,6 +15,35 @@ body{
   
 }
 
+
+.running-text{
+    width:100%;
+    overflow:hidden;
+    background:#c62828;
+    color:#fff;
+    padding:12px 0;
+    border-radius:8px;
+    margin-bottom:20px;
+    white-space:nowrap;
+}
+
+.running-content{
+    display:inline-block;
+    padding-left:100%;
+    animation:scrollText 25s linear infinite;
+    font-size:18px;
+    font-weight:bold;
+}
+
+@keyframes scrollText{
+    0%{
+        transform:translateX(0);
+    }
+    100%{
+        transform:translateX(-100%);
+    }
+}
+
 /* ================= GLOBAL MOBILE FIX ================= */
 
 body {
