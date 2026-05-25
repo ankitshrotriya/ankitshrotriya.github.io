@@ -384,6 +384,33 @@ formatDate(member.created_at),
 )
 
 /* =========================
+VALIDITY
+========================= */
+
+ctx.fillStyle = '#111'
+
+ctx.font = 'bold 20px Arial'
+
+ctx.textAlign = 'left'
+
+let validityText = 'One Year'
+
+if (
+    member.membership_fee == 2100 ||
+    member.membership_fee == '2100' ||
+    member.membership_fee == '2100.00'
+) {
+    validityText = 'Lifetime'
+}
+
+ctx.fillText(
+    validityText,
+    145,
+    645
+)
+
+
+/* =========================
 POSITION
 ========================= */
 
