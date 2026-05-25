@@ -44,6 +44,33 @@ body{
     }
 }
 
+.about-box-section{
+    width:90%;
+    margin:40px auto 20px;
+}
+
+.about-box{
+    background:#ffffff;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.15);
+    border-left:6px solid #c62828;
+    text-align:center;
+}
+
+.about-box h2{
+    color:#c62828;
+    font-size:32px;
+    margin-bottom:20px;
+}
+
+.about-box p{
+    font-size:18px;
+    line-height:1.9;
+    color:#333;
+    text-align:justify;
+}
+
 /* ================= GLOBAL MOBILE FIX ================= */
 
 body {
