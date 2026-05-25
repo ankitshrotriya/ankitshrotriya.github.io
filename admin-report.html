@@ -258,6 +258,11 @@ Membership Records
 Donation Records
 </button>
 
+
+<button onclick="loadApprovedReport()">
+Approved Report
+</button>
+
 </div>
 
 <div class="loader" id="loader">
@@ -658,6 +663,369 @@ document.getElementById(
 ).style.display='none'
 
 }
+
+/* =========================
+LOAD APPROVED REPORT
+========================= */
+
+window.loadApprovedReport =
+async function(){
+
+document.getElementById(
+'pageTitle'
+).innerHTML =
+'Approved Transactions Report'
+
+document.getElementById(
+'loader'
+).style.display = 'block'
+
+const mobileCards =
+document.getElementById('mobileCards')
+
+mobileCards.innerHTML = ''
+
+/* =========================
+MEMBERSHIP DATA
+========================= */
+
+const {
+data: membershipData,
+error: membershipError
+} = await supabase
+
+.from('membership_registration')
+
+.select('*')
+
+.eq('payment_status', true)
+
+.order('id', { ascending:false })
+
+/* =========================
+DONATION DATA
+========================= */
+
+const {
+data: donationData,
+error: donationError
+} = await supabase
+
+.from('donation')
+
+.select('*')
+
+.eq('payment_status', true)
+
+.order('id', { ascending:false })
+
+if(membershipError){
+
+alert(membershipError.message)
+return
+
+}
+
+if(donationError){
+
+alert(donationError.message)
+return
+
+}
+
+/* =========================
+TOTALS
+========================= */
+
+let membershipTotal = 0
+let donationTotal = 0
+
+membershipData.forEach(item => {
+
+membershipTotal += Number(
+item.membership_fee || 0
+)
+
+})
+
+donationData.forEach(item => {
+
+donationTotal += Number(
+item.final_amount || 0
+)
+
+})
+
+const grandTotal =
+membershipTotal + donationTotal
+
+/* =========================
+COMBINE DATA
+========================= */
+
+const allData = [
+
+...(membershipData || []).map(item => ({
+...item,
+transaction_type: 'Membership',
+amount:
+item.membership_fee || ''
+})),
+
+...(donationData || []).map(item => ({
+...item,
+transaction_type: 'Donation',
+amount:
+item.final_amount || ''
+}))
+
+]
+
+/* =========================
+SORT
+========================= */
+
+allData.sort((a,b) => b.id - a.id)
+
+/* =========================
+TABLE VIEW
+========================= */
+
+mobileCards.innerHTML = `
+
+<div style="
+background:white;
+padding:15px;
+border-radius:12px;
+margin-bottom:15px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+">
+
+<h2 style="
+color:#ff7a00;
+margin-bottom:10px;
+">
+
+Totals
+
+</h2>
+
+<p>
+<strong>
+Membership Total:
+</strong>
+
+₹${membershipTotal}
+
+</p>
+
+<p>
+<strong>
+Donation Total:
+</strong>
+
+₹${donationTotal}
+
+</p>
+
+<p>
+
+<strong>
+
+Grand Total:
+
+</strong>
+
+₹${grandTotal}
+
+</p>
+
+</div>
+
+<div style="
+overflow-x:auto;
+background:white;
+border-radius:12px;
+padding:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+">
+
+<table style="
+width:100%;
+border-collapse:collapse;
+min-width:900px;
+">
+
+<thead>
+
+<tr style="
+background:#ff7a00;
+color:white;
+">
+
+<th style="padding:12px;border:1px solid #ddd;">
+Type
+</th>
+
+<th style="padding:12px;border:1px solid #ddd;">
+Name
+</th>
+
+<th style="padding:12px;border:1px solid #ddd;">
+Mobile
+</th>
+
+<th style="padding:12px;border:1px solid #ddd;">
+UTR
+</th>
+
+<th style="padding:12px;border:1px solid #ddd;">
+Amount
+</th>
+
+<th style="padding:12px;border:1px solid #ddd;">
+Position
+</th>
+
+<th style="padding:12px;border:1px solid #ddd;">
+Status
+</th>
+
+</tr>
+
+</thead>
+
+<tbody id="approvedTableBody">
+
+</tbody>
+
+</table>
+
+</div>
+
+`
+
+const tableBody =
+document.getElementById(
+'approvedTableBody'
+)
+
+if(allData.length === 0){
+
+tableBody.innerHTML = `
+
+<tr>
+
+<td colspan="7"
+style="
+padding:15px;
+text-align:center;
+">
+
+No Approved Records Found
+
+</td>
+
+</tr>
+
+`
+
+}
+
+/* =========================
+ADD ROWS
+========================= */
+
+for(let item of allData){
+
+tableBody.innerHTML += `
+
+<tr>
+
+<td style="
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+">
+
+${item.transaction_type}
+
+</td>
+
+<td style="
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+">
+
+${item.name || ''}
+
+</td>
+
+<td style="
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+">
+
+${item.mobile || ''}
+
+</td>
+
+<td style="
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+">
+
+${item.utr_number || ''}
+
+</td>
+
+<td style="
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+">
+
+₹${item.amount || ''}
+
+</td>
+
+<td style="
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+">
+
+${item.position || ''}
+
+</td>
+
+<td style="
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+color:green;
+font-weight:bold;
+">
+
+Approved
+
+</td>
+
+</tr>
+
+`
+
+}
+
+document.getElementById(
+'loader'
+).style.display='none'
+
+}
+
 
 /* =========================
 UPDATE MEMBERSHIP STATUS
