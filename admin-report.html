@@ -71,6 +71,34 @@ border-radius:8px;
 cursor:pointer;
 }
 
+#reportFilters{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+#reportFilters input,
+#reportFilters select{
+padding:10px;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+.spinner{
+border:5px solid #f3f3f3;
+border-top:5px solid #ff7a00;
+border-radius:50%;
+width:50px;
+height:50px;
+animation:spin 1s linear infinite;
+margin:20px auto;
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
 /* MAIN CONTENT */
 
 #mainContent{
@@ -263,10 +291,129 @@ Donation Records
 Approved Report
 </button>
 
+<button onclick="loadReports()">
+Reports
+</button>
+
 </div>
 
 <div class="loader" id="loader">
 Loading Data...
+</div>
+
+<div id="reportFilters" style="display:none;background:white;padding:15px;border-radius:10px;margin-bottom:15px;">
+
+<select id="filterType">
+<option value="">All Type</option>
+<option value="membership">Membership</option>
+<option value="donation">Donation</option>
+</select>
+
+<input type="date" id="fromDate">
+
+<input type="date" id="toDate">
+
+<select id="districtFilter">
+<option value="">All District</option>
+<option>Agar Malwa</option>
+<option>Alirajpur</option>
+<option>Anuppur</option>
+<option>Ashoknagar</option>
+<option>Balaghat</option>
+<option>Barwani</option>
+<option>Betul</option>
+<option>Bhind</option>
+<option>Bhopal</option>
+<option>Burhanpur</option>
+<option>Chhatarpur</option>
+<option>Chhindwara</option>
+<option>Damoh</option>
+<option>Datia</option>
+<option>Dewas</option>
+<option>Dhar</option>
+<option>Dindori</option>
+<option>Guna</option>
+<option>Gwalior</option>
+<option>Harda</option>
+<option>Hoshangabad</option>
+<option>Indore</option>
+<option>Jabalpur</option>
+<option>Jhabua</option>
+<option>Katni</option>
+<option>Khandwa</option>
+<option>Khargone</option>
+<option>Mandla</option>
+<option>Mandsaur</option>
+<option>Morena</option>
+<option>Narsinghpur</option>
+<option>Neemuch</option>
+<option>Panna</option>
+<option>Raisen</option>
+<option>Rajgarh</option>
+<option>Ratlam</option>
+<option>Rewa</option>
+<option>Sagar</option>
+<option>Satna</option>
+<option>Sehore</option>
+<option>Seoni</option>
+<option>Shahdol</option>
+<option>Shajapur</option>
+<option>Sheopur</option>
+<option>Shivpuri</option>
+<option>Sidhi</option>
+<option>Singrauli</option>
+<option>Tikamgarh</option>
+<option>Ujjain</option>
+<option>Umaria</option>
+<option>Vidisha</option>
+</select>
+
+<select id="companyFilter">
+
+<option value="">All Company</option>
+
+<option>Poory Kshetra V.V. Co. Ltd.</option>
+<option>Madhya Kshetra V.V. Co. Ltd.</option>
+<option>Paschim Kshetra V.V. Co. Ltd.</option>
+<option>Power Generating Company</option>
+<option>Power Transmission Company</option>
+<option>Power Management Company</option>
+
+</select>
+
+<select id="positionFilter">
+
+<option value="">All Position</option>
+
+<option>सहायक राजस्व अधिकारी</option>
+<option>लाइन/परीक्षण/सिविल/रेखण परिचारक</option>
+<option>लाइन अटेंडेंट संविदा</option>
+<option>लाइन/परीक्षण/संयंत्र/सिविल सहायक</option>
+<option>मीटर रीडर</option>
+<option>वरिष्ठ संयंत्र पर्यवेक्षक</option>
+<option>संयंत्र पर्यवेक्षक</option>
+<option>वरिष्ठ संयंत्र सहायक</option>
+<option>मेल नर्स</option>
+<option>वार्ड बॉय</option>
+<option>सहायक अभियंता</option>
+<option>कनिष्ठ अभियंता</option>
+<option>कार्यालय सहायक ग्रेड 1/2/3</option>
+<option>फायरमैन</option>
+<option>लीडिंग फायरमैन</option>
+<option>सिविल अटेंडेंट/सीनियर सिविल अटेंडेंट</option>
+<option>सिविल असिस्टेंट/सीनियर सिविल असिस्टेंट</option>
+<option>सिविल सुपरवाइजर/सीनियर सिविल सुपरवाइजर</option>
+<option>रेडियोग्राफर</option>
+<option>लैब टेक्नीशियन</option>
+<option>आउटसोर्स कर्मचारी</option>
+<option>अन्य कर्मचारी</option>
+
+</select>
+
+<button onclick="searchReports()">
+Search
+</button>
+
 </div>
 
 <div class="mobile-cards" id="mobileCards">
@@ -325,6 +472,10 @@ LOAD MEMBERSHIP
 
 window.loadMembership =
 async function(){
+
+document.getElementById(
+'reportFilters'
+).style.display='none'
 
 document.getElementById(
 'pageTitle'
@@ -512,6 +663,10 @@ window.loadDonation =
 async function(){
 
 document.getElementById(
+'reportFilters'
+).style.display='none'
+
+document.getElementById(
 'pageTitle'
 ).innerHTML =
 'Donation Report'
@@ -670,6 +825,10 @@ LOAD APPROVED REPORT
 
 window.loadApprovedReport =
 async function(){
+
+document.getElementById(
+'reportFilters'
+).style.display='none'
 
 document.getElementById(
 'pageTitle'
@@ -1106,6 +1265,227 @@ DEFAULT LOAD
 ========================= */
 
 loadMembership()
+
+
+window.loadReports = async function(){
+
+document.getElementById('pageTitle').innerHTML =
+'Active Reports'
+
+document.getElementById('reportFilters').style.display =
+'flex'
+
+document.getElementById('mobileCards').innerHTML=''
+
+document.getElementById('loader').style.display =
+'none'
+
+}
+
+window.searchReports = async function(){
+
+document.getElementById('mobileCards').innerHTML = `
+<div class="spinner"></div>
+<h3 style="text-align:center;color:#ff7a00;">
+Loading Report...
+</h3>
+`
+
+let rowNo = 0
+
+const type =
+document.getElementById('filterType').value
+
+const district =
+document.getElementById('districtFilter').value
+
+const company =
+document.getElementById('companyFilter').value
+
+const position =
+document.getElementById('positionFilter').value
+
+const fromDate =
+document.getElementById('fromDate').value
+
+const toDate =
+document.getElementById('toDate').value
+
+let html = `
+
+<div style="
+overflow-x:auto;
+background:white;
+border-radius:12px;
+padding:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+">
+
+<table style="
+width:100%;
+border-collapse:collapse;
+min-width:1200px;
+">
+
+<thead>
+
+<tr style="
+background:#ff7a00;
+color:white;
+">
+
+<th>ID</th>
+<th>Type</th>
+<th>Name</th>
+<th>Mobile</th>
+<th>District</th>
+<th>Company</th>
+<th>Position</th>
+<th>UTR</th>
+<th>Amount</th>
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+`
+
+if(type==='' || type==='membership'){
+
+let query = supabase
+.from('membership_registration')
+.select('*')
+.eq('payment_status',true)
+
+if(district)
+query=query.ilike('district',
+`%${district}%`)
+
+if(company)
+query=query.ilike('company_name',
+`%${company}%`)
+
+if(position)
+query=query.ilike('position',
+`%${position}%`)
+
+if(fromDate)
+query=query.gte('created_at',fromDate)
+
+if(toDate)
+query=query.lte('created_at',
+toDate+' 23:59:59')
+
+const {data}=await query.order('id',{ascending:false})
+
+data.forEach(item=>{
+
+html += `
+
+<tr>
+
+<td>${++rowNo}</td>
+
+<td>Membership</td>
+
+<td>${item.name||''}</td>
+
+<td>${item.mobile||''}</td>
+
+<td>${item.district||''}</td>
+
+<td>${item.company_name||''}</td>
+
+<td>${item.position||''}</td>
+
+<td>${item.utr_number||''}</td>
+
+<td>₹${item.membership_fee||0}</td>
+
+<td>${item.created_at ?
+item.created_at.substring(0,10) : ''}</td>
+
+</tr>
+
+`
+
+})
+
+}
+
+if(type==='' || type==='donation'){
+
+let query = supabase
+.from('donation')
+.select('*')
+.eq('payment_status',true)
+
+if(position)
+query=query.ilike('position',
+`%${position}%`)
+
+if(fromDate)
+query=query.gte('created_at',fromDate)
+
+if(toDate)
+query=query.lte('created_at',
+toDate+' 23:59:59')
+
+const {data}=await query.order('id',{ascending:false})
+
+data.forEach(item=>{
+
+html += `
+
+<tr>
+
+<td>${++rowNo}</td>
+
+<td>Donation</td>
+
+<td>${item.name||''}</td>
+
+<td>${item.mobile||''}</td>
+
+<td>-</td>
+
+<td>-</td>
+
+<td>${item.position||''}</td>
+
+<td>${item.utr_number||''}</td>
+
+<td>₹${item.final_amount||0}</td>
+
+<td>${item.created_at ?
+item.created_at.substring(0,10) : ''}</td>
+
+</tr>
+
+`
+
+})
+
+}
+
+html += `
+
+</tbody>
+
+</table>
+
+</div>
+
+`
+
+document.getElementById(
+'mobileCards'
+).innerHTML = html
+
+}
 
 </script>
 
