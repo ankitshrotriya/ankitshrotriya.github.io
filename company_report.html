@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Company Report</title>
+<style>
+body{font-family:Arial;background:#f5f5f5;padding:15px;margin:0}
+#loginBox{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;justify-content:center;align-items:center;background:#f5f5f5}
+.login-card{background:#fff;padding:25px;border-radius:12px;width:320px;box-shadow:0 0 15px rgba(0,0,0,.15)}
+.login-card h2{text-align:center;color:#ff7a00}
+input{width:100%;padding:12px;margin-top:10px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box}
+button{width:100%;padding:12px;margin-top:15px;border:none;background:#ff7a00;color:#fff;font-size:16px;border-radius:8px;cursor:pointer}
+#mainPage{display:none}
+h1{text-align:center;color:#ff7a00}
+.table-box{overflow-x:auto;background:white;padding:10px;border-radius:10px}
+table{width:100%;border-collapse:collapse}
+th{background:#ff7a00;color:white;padding:10px;border:1px solid #ddd}
+td{padding:10px;border:1px solid #ddd;text-align:center}
+.total-box{background:white;padding:15px;border-radius:10px;margin-bottom:15px;font-size:18px;font-weight:bold}
+</style>
+</head>
+<body>
+
+<div id="loginBox">
+<div class="login-card">
+<h2>Company Login</h2>
+<input type="password" id="password" placeholder="Enter Password">
+<button onclick="login()">Login</button>
+</div>
+</div>
+
+<div id="mainPage">
+<h1 id="companyTitle"></h1>
+
+<div class="total-box">
+Total Amount : ₹ <span id="totalAmount">0</span>
+</div>
+
+<div class="table-box">
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Type</th>
+<th>Mobile</th>
+<th>Amount</th>
+<th>Position</th>
+</tr>
+</thead>
+<tbody id="tableData"></tbody>
+</table>
+</div>
+</div>
+
+<script>
+let loggedCompany='';
+
+const companyPasswords={
+"MPWZ":"Madhya Kshetra V.V. Co. Ltd.",
+"PPWZ":"Poory Kshetra V.V. Co. Ltd.",
+"PKWZ":"Paschim Kshetra V.V. Co. Ltd.",
+"PGC":"Power Generating Company",
+"PTC":"Power Transmission Company",
+"PMC":"Power Management Company"
+};
+
+function login(){
+const pass=document.getElementById('password').value.trim();
+
+if(companyPasswords[pass]){
+loggedCompany=companyPasswords[pass];
+document.getElementById('loginBox').style.display='none';
+document.getElementById('mainPage').style.display='block';
+document.getElementById('companyTitle').innerHTML=loggedCompany;
+loadData();
+}else{
+alert('Invalid Password');
+}
+}
+</script>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const supabase=createClient(
+'https://uxdeihxbacsrpxugibqq.supabase.co',
+'sb_publishable_toimxIMSyU-ld7bE-5AjYA_x7CmUh_G'
+);
+
+window.loadData=async function(){
+
+let totalAmount=0;
+
+const {data,error}=await supabase
+.from('membership_registration')
+.select('*')
+.eq('payment_status',true)
+.eq('company_name',loggedCompany)
+.order('id',{ascending:false});
+
+if(error){
+alert(error.message);
+return;
+}
+
+let html='';
+
+(data || []).forEach((item,index)=>{
+
+const amount = parseFloat(item.membership_fee || 0);
+
+totalAmount += amount;
+
+html+=`
+<tr>
+<td>${index + 1}</td>
+<td>${item.name || ''}</td>
+<td>Membership</td>
+<td>${item.mobile || ''}</td>
+<td>₹${amount}</td>
+<td>${item.position || ''}</td>
+</tr>
+`;
+
+});
+
+document.getElementById('tableData').innerHTML = html;
+
+document.getElementById('totalAmount').innerHTML =
+totalAmount.toLocaleString('en-IN');
+
+console.log('TOTAL AMOUNT =', totalAmount);
+
+}
+</script>
+
+
+</body>
+</html>
