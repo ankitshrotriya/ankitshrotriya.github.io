@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Report</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Arial,sans-serif;
+background:#f5f5f5;
+padding:12px;
+}
+
+/* PASSWORD SCREEN */
+
+#passwordScreen{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#f5f5f5;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999;
+}
+
+.password-box{
+background:white;
+padding:25px;
+border-radius:12px;
+width:100%;
+max-width:350px;
+box-shadow:0 4px 15px rgba(0,0,0,0.15);
+text-align:center;
+}
+
+.password-box h2{
+color:#ff7a00;
+margin-bottom:20px;
+}
+
+.password-box input{
+width:100%;
+padding:12px;
+border:1px solid #ccc;
+border-radius:8px;
+margin-bottom:15px;
+font-size:16px;
+}
+
+.password-box button{
+width:100%;
+padding:12px;
+border:none;
+background:#ff7a00;
+color:white;
+font-size:16px;
+border-radius:8px;
+cursor:pointer;
+}
+
+#reportFilters{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+#reportFilters input,
+#reportFilters select{
+padding:10px;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+.spinner{
+border:5px solid #f3f3f3;
+border-top:5px solid #ff7a00;
+border-radius:50%;
+width:50px;
+height:50px;
+animation:spin 1s linear infinite;
+margin:20px auto;
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+/* MAIN CONTENT */
+
+#mainContent{
+display:none;
+}
+
+h1{
+text-align:center;
+color:#ff7a00;
+margin-bottom:20px;
+font-size:24px;
+}
+
+/* TOP BUTTONS */
+
+.top-buttons{
+display:flex;
+justify-content:center;
+gap:10px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.top-buttons button{
+background:#ff7a00;
+color:white;
+border:none;
+padding:12px 18px;
+border-radius:8px;
+cursor:pointer;
+font-size:14px;
+font-weight:bold;
+}
+
+/* LOADER */
+
+.loader{
+text-align:center;
+font-size:20px;
+margin-top:50px;
+font-weight:bold;
+color:#ff7a00;
+}
+
+/* MOBILE CARDS */
+
+.mobile-cards{
+display:block;
+}
+
+.card{
+background:white;
+padding:14px;
+margin-bottom:15px;
+border-radius:12px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.card h3{
+color:#ff7a00;
+margin-bottom:10px;
+font-size:20px;
+}
+
+.card p{
+margin:7px 0;
+font-size:14px;
+word-break:break-word;
+line-height:1.5;
+}
+
+.card strong{
+color:#333;
+}
+
+.action-buttons{
+margin-top:12px;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.approve-btn{
+background:green;
+color:white;
+border:none;
+padding:12px;
+border-radius:6px;
+cursor:pointer;
+font-size:15px;
+width:100%;
+}
+
+.reject-btn{
+background:red;
+color:white;
+border:none;
+padding:12px;
+border-radius:6px;
+cursor:pointer;
+font-size:15px;
+width:100%;
+}
+
+.status-approved{
+color:green;
+font-weight:bold;
+}
+
+.status-rejected{
+color:red;
+font-weight:bold;
+}
+
+.status-pending{
+color:orange;
+font-weight:bold;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+body{
+padding:10px;
+}
+
+h1{
+font-size:22px;
+}
+
+.card{
+padding:12px;
+}
+
+.card p{
+font-size:13px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- PASSWORD SCREEN -->
+
+<div id="passwordScreen">
+
+<div class="password-box">
+
+<h2>Admin Login</h2>
+
+<input
+type="password"
+id="passwordInput"
+placeholder="Enter Password"
+>
+
+<button onclick="checkPassword()">
+Login
+</button>
+
+</div>
+
+</div>
+
+<!-- MAIN CONTENT -->
+
+<div id="mainContent">
+
+<h1 id="pageTitle">
+Membership Registration Report
+</h1>
+
+<div class="top-buttons">
+
+<button onclick="loadMembership()">
+Membership Records
+</button>
+
+<button onclick="loadDonation()">
+Donation Records
+</button>
+
+
+<button onclick="loadApprovedReport()">
+Approved Report
+</button>
+
+<button onclick="loadReports()">
+Reports
+</button>
+
+</div>
+
+<div class="loader" id="loader">
+Loading Data...
+</div>
+
+<div id="reportFilters" style="display:none;background:white;padding:15px;border-radius:10px;margin-bottom:15px;">
+
+<select id="filterType">
+<option value="">All Type</option>
+<option value="membership">Membership</option>
+<option value="donation">Donation</option>
+</select>
+
+<input type="date" id="fromDate">
+
+<input type="date" id="toDate">
+
+<select id="districtFilter">
+<option value="">All District</option>
+<option>Agar Malwa</option>
+<option>Alirajpur</option>
+<option>Anuppur</option>
+<option>Ashoknagar</option>
+<option>Balaghat</option>
+<option>Barwani</option>
+<option>Betul</option>
+<option>Bhind</option>
+<option>Bhopal</option>
+<option>Burhanpur</option>
+<option>Chhatarpur</option>
+<option>Chhindwara</option>
+<option>Damoh</option>
+<option>Datia</option>
+<option>Dewas</option>
+<option>Dhar</option>
+<option>Dindori</option>
+<option>Guna</option>
+<option>Gwalior</option>
+<option>Harda</option>
+<option>Hoshangabad</option>
+<option>Indore</option>
+<option>Jabalpur</option>
+<option>Jhabua</option>
+<option>Katni</option>
+<option>Khandwa</option>
+<option>Khargone</option>
+<option>Mandla</option>
+<option>Mandsaur</option>
+<option>Morena</option>
+<option>Narsinghpur</option>
+<option>Neemuch</option>
+<option>Panna</option>
+<option>Raisen</option>
+<option>Rajgarh</option>
+<option>Ratlam</option>
+<option>Rewa</option>
+<option>Sagar</option>
+<option>Satna</option>
+<option>Sehore</option>
+<option>Seoni</option>
+<option>Shahdol</option>
+<option>Shajapur</option>
+<option>Sheopur</option>
+<option>Shivpuri</option>
+<option>Sidhi</option>
+<option>Singrauli</option>
+<option>Tikamgarh</option>
+<option>Ujjain</option>
+<option>Umaria</option>
+<option>Vidisha</option>
+</select>
+
+<select id="companyFilter">
+
+<option value="">All Company</option>
+
+<option>Poory Kshetra V.V. Co. Ltd.</option>
+<option>Madhya Kshetra V.V. Co. Ltd.</option>
+<option>Paschim Kshetra V.V. Co. Ltd.</option>
+<option>Power Generating Company</option>
+<option>Power Transmission Company</option>
+<option>Power Management Company</option>
+
+</select>
+
+<select id="positionFilter">
+
+<option value="">All Position</option>
+
+<option>सहायक राजस्व अधिकारी</option>
+<option>लाइन/परीक्षण/सिविल/रेखण परिचारक</option>
+<option>लाइन अटेंडेंट संविदा</option>
+<option>लाइन/परीक्षण/संयंत्र/सिविल सहायक</option>
+<option>मीटर रीडर</option>
+<option>वरिष्ठ संयंत्र पर्यवेक्षक</option>
+<option>संयंत्र पर्यवेक्षक</option>
+<option>वरिष्ठ संयंत्र सहायक</option>
+<option>मेल नर्स</option>
+<option>वार्ड बॉय</option>
+<option>सहायक अभियंता</option>
+<option>कनिष्ठ अभियंता</option>
+<option>कार्यालय सहायक ग्रेड 1/2/3</option>
+<option>फायरमैन</option>
+<option>लीडिंग फायरमैन</option>
+<option>सिविल अटेंडेंट/सीनियर सिविल अटेंडेंट</option>
+<option>सिविल असिस्टेंट/सीनियर सिविल असिस्टेंट</option>
+<option>सिविल सुपरवाइजर/सीनियर सिविल सुपरवाइजर</option>
+<option>रेडियोग्राफर</option>
+<option>लैब टेक्नीशियन</option>
+<option>आउटसोर्स कर्मचारी</option>
+<option>अन्य कर्मचारी</option>
+
+</select>
+
+<button onclick="searchReports()">
+Search
+</button>
+
+<button type="button" onclick="exportReportsToExcel()">
+Download Excel
+</button>
+
+</div>
+
+<div class="mobile-cards" id="mobileCards">
+</div>
+
+</div>
+
+<script>
+
+function checkPassword(){
+
+const password = "Admin@2026"
+
+const enteredPassword =
+document.getElementById("passwordInput").value
+
+if(enteredPassword === password){
+
+document.getElementById(
+"passwordScreen"
+).style.display = "none"
+
+document.getElementById(
+"mainContent"
+).style.display = "block"
+
+}else{
+
+alert("Wrong Password")
+
+}
+
+}
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<script type="module">
+
+import { createClient }
+from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+const supabaseUrl =
+'https://uxdeihxbacsrpxugibqq.supabase.co'
+
+const supabaseKey =
+'sb_publishable_toimxIMSyU-ld7bE-5AjYA_x7CmUh_G'
+
+const supabase = createClient(
+supabaseUrl,
+supabaseKey
+)
+
+/* =========================
+LOAD MEMBERSHIP
+========================= */
+
+window.loadMembership =
+async function(){
+
+document.getElementById(
+'reportFilters'
+).style.display='none'
+
+document.getElementById(
+'pageTitle'
+).innerHTML =
+'Membership Registration Report'
+
+document.getElementById(
+'loader'
+).style.display = 'block'
+
+const mobileCards =
+document.getElementById('mobileCards')
+
+mobileCards.innerHTML = ''
+
+const { data, error } = await supabase
+
+.from('membership_registration')
+
+.select('*')
+
+.is('payment_status', null)
+
+.order('id', { ascending:false })
+
+window.membershipExcelData = data || [];
+
+console.log(data)
+console.log(error)
+
+if(error){
+
+alert(error.message)
+return
+
+}
+
+mobileCards.innerHTML = `
+<div style="margin-bottom:15px;">
+<button type="button" onclick="exportMembershipExcel()"
+style="background:#16803c;color:white;border:0;padding:12px 18px;border-radius:8px;font-weight:bold;cursor:pointer;width:100%;">
+Download Membership Excel
+</button>
+</div>
+`;
+
+if(data.length === 0){
+
+mobileCards.innerHTML += `
+
+<div class="card">
+No Membership Data Found
+</div>
+
+`
+
+}
+
+for(let item of data){
+
+let statusText = 'Pending'
+let statusClass = 'status-pending'
+
+if(item.payment_status === true){
+
+statusText = 'Approved'
+statusClass = 'status-approved'
+
+}
+
+if(item.payment_status === false){
+
+statusText = 'Rejected'
+statusClass = 'status-rejected'
+
+}
+
+mobileCards.innerHTML += `
+
+<div class="card">
+
+<h3>${item.name || ''}</h3>
+
+<p>
+<strong>ID:</strong>
+${item.id}
+</p>
+
+<p>
+<strong>Father Name:</strong>
+${item.father_name || ''}
+</p>
+
+<p>
+<strong>Email:</strong>
+${item.email || ''}
+</p>
+
+<p>
+<strong>Mobile:</strong>
+${item.mobile || ''}
+</p>
+
+<p>
+<strong>DOB:</strong>
+${item.dob || ''}
+</p>
+
+<p>
+<strong>District:</strong>
+${item.district || ''}
+</p>
+
+<p>
+<strong>Company:</strong>
+${item.company_name || ''}
+</p>
+
+<p>
+<strong>Position:</strong>
+${item.position || ''}
+</p>
+
+<p>
+<strong>Office:</strong>
+${item.office_name || ''}
+</p>
+
+<p>
+<strong>Employee Class:</strong>
+${item.employee_class || ''}
+</p>
+
+<p>
+<strong>Pincode:</strong>
+${item.pincode || ''}
+</p>
+
+<p>
+<strong>Fee:</strong>
+₹${item.membership_fee || ''}
+</p>
+
+<p>
+<strong>UTR:</strong>
+${item.utr_number || ''}
+</p>
+
+<p class="${statusClass}">
+
+<strong>Status:</strong>
+
+${statusText}
+
+</p>
+
+<div class="action-buttons">
+
+<button
+class="approve-btn"
+onclick="updateMembershipStatus(${item.id}, true)"
+>
+
+Approve
+
+</button>
+
+<button
+class="reject-btn"
+onclick="updateMembershipStatus(${item.id}, false)"
+>
+
+Reject
+
+</button>
+
+</div>
+
+</div>
+
+`
+
+}
+
+document.getElementById(
+'loader'
+).style.display='none'
+
+}
+
+/* =========================
+LOAD DONATION
+========================= */
+
+window.loadDonation =
+async function(){
+
+document.getElementById(
+'reportFilters'
+).style.display='none'
+
+document.getElementById(
+'pageTitle'
+).innerHTML =
+'Donation Report'
+
+document.getElementById(
+'loader'
+).style.display = 'block'
+
+const mobileCards =
+document.getElementById('mobileCards')
+
+mobileCards.innerHTML = ''
+
+const { data, error } = await supabase
+
+.from('donation')
+
+.select('*')
+
+.is('payment_status', null)
+
+.order('id', { ascending:false })
+
+window.donationExcelData = data || [];
+
+console.log(data)
+console.log(error)
+
+if(error){
+
+alert(error.message)
+return
+
+}
+
+mobileCards.innerHTML = `
+<div style="margin-bottom:15px;">
+<button type="button" onclick="exportDonationExcel()"
+style="background:#16803c;color:white;border:0;padding:12px 18px;border-radius:8px;font-weight:bold;cursor:pointer;width:100%;">
+Download Donation Excel
+</button>
+</div>
+`;
+
+if(data.length === 0){
+
+mobileCards.innerHTML += `
+
+<div class="card">
+No Donation Data Found
+</div>
+
+`
+
+}
+
+for(let item of data){
+
+let statusText = 'Pending'
+let statusClass = 'status-pending'
+
+if(item.payment_status === true){
+
+statusText = 'Approved'
+statusClass = 'status-approved'
+
+}
+
+if(item.payment_status === false){
+
+statusText = 'Rejected'
+statusClass = 'status-rejected'
+
+}
+
+mobileCards.innerHTML += `
+
+<div class="card">
+
+<h3>${item.name || ''}</h3>
+
+<p>
+<strong>ID:</strong>
+${item.id}
+</p>
+
+<p>
+<strong>Receipt Number:</strong>
+${item.receipt_number || ''}
+</p>
+
+<p>
+<strong>Invoice Number:</strong>
+${item.invoice_number || ''}
+</p>
+
+<p>
+<strong>Mobile:</strong>
+${item.mobile || ''}
+</p>
+
+<p>
+<strong>Position:</strong>
+${item.position || ''}
+</p>
+
+<p>
+<strong>Union ID:</strong>
+${item.union_id || ''}
+</p>
+
+<p>
+<strong>Donation Amount:</strong>
+₹${item.final_amount || ''}
+</p>
+
+<p>
+<strong>UTR:</strong>
+${item.utr_number || ''}
+</p>
+
+<p class="${statusClass}">
+
+<strong>Status:</strong>
+
+${statusText}
+
+</p>
+
+<div class="action-buttons">
+
+<button
+class="approve-btn"
+onclick="updateDonationStatus(${item.id}, true)"
+>
+
+Approve
+
+</button>
+
+<button
+class="reject-btn"
+onclick="updateDonationStatus(${item.id}, false)"
+>
+
+Reject
+
+</button>
+
+</div>
+
+</div>
+
+`
+
+}
+
+document.getElementById(
+'loader'
+).style.display='none'
+
+}
+
+/* =========================
+LOAD APPROVED REPORT
+========================= */
+
+window.loadApprovedReport =
+async function(){
+
+document.getElementById(
+'reportFilters'
+).style.display='none'
+
+document.getElementById(
+'pageTitle'
+).innerHTML =
+'Approved Transactions Report'
+
+document.getElementById(
+'loader'
+).style.display = 'block'
+
+const mobileCards =
+document.getElementById('mobileCards')
+
+mobileCards.innerHTML = '';
+
+/* =========================
+MEMBERSHIP DATA
+========================= */
+
+const {
+data: membershipData,
+error: membershipError
+} = await supabase
+
+.from('membership_registration')
+
+.select('*')
+
+.eq('payment_status', true)
+
+.order('id', { ascending:false })
+
+/* =========================
+DONATION DATA
+========================= */
+
+const {
+data: donationData,
+error: donationError
+} = await supabase
+
+.from('donation')
+
+.select('*')
+
+.eq('payment_status', true)
+
+.order('id', { ascending:false })
+
+if(membershipError){
+
+alert(membershipError.message)
+return
+
+}
+
+if(donationError){
+
+alert(donationError.message)
+return
+
+}
+
+window.approvedExcelData = [
+...(membershipData || []).map(item => ({...item, transaction_type: 'Membership', amount: item.membership_fee || ''})),
+...(donationData || []).map(item => ({...item, transaction_type: 'Donation', amount: item.final_amount || ''}))
+];
+
+/* =========================
+TOTALS
+========================= */
+
+let membershipTotal = 0
+let donationTotal = 0
+
+membershipData.forEach(item => {
+
+membershipTotal += Number(
+item.membership_fee || 0
+)
+
+})
+
+donationData.forEach(item => {
+
+donationTotal += Number(
+item.final_amount || 0
+)
+
+})
+
+const grandTotal =
+membershipTotal + donationTotal
+
+/* =========================
+COMBINE DATA
+========================= */
+
+const allData = [
+
+...(membershipData || []).map(item => ({
+...item,
+transaction_type: 'Membership',
+amount:
+item.membership_fee || ''
+})),
+
+...(donationData || []).map(item => ({
+...item,
+transaction_type: 'Donation',
+amount:
+item.final_amount || ''
+}))
+
+]
+
+/* =========================
+SORT
+========================= */
+
+allData.sort((a,b) => b.id - a.id)
+
+/* =========================
+TABLE VIEW
+========================= */
+
+mobileCards.innerHTML = `
+
+<div style="margin-bottom:15px;">
+<button type="button" onclick="exportApprovedExcel()"
+style="background:#16803c;color:white;border:0;padding:12px 18px;border-radius:8px;font-weight:bold;cursor:pointer;width:100%;">
+Download Approved Excel
+</button>
+</div>
+
+<div style="
+background:white;
+padding:15px;
+border-radius:12px;
+margin-bottom:15px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+">
+
+<h2 style="
+color:#ff7a00;
+margin-bottom:10px;
+">
+
+Totals
+
+</h2>
+
+<p>
+<strong>
+Membership Total:
+</strong>
+
+₹${membershipTotal}
+
+</p>
+
+<p>
+<strong>
+Donation Total:
+</strong>
+
+₹${donationTotal}
+
+</p>
+
+<p>
+
+<strong>
+
+Grand Total:
+
+</strong>
+
+₹${grandTotal}
+
+</p>
+
+</div>
+
+<div style="
+overflow-x:auto;
+background:white;
+border-radius:12px;
+padding:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+">
+
+<table style="
+width:100%;
+border-collapse:collapse;
+min-width:900px;
+">
+
+<thead>
+
+<tr style="
+background:#ff7a00;
+color:white;
+">
+
+<th style="padding:12px;border:1px solid #ddd;">
+Type
+</th>
+
+<th style="padding:12px;border:1px solid #ddd;">
+Name
+</th>
+
+<th style="padding:12px;border:1px solid #ddd;">
+Mobile
+</th>
+
+<th style="padding:12px;border:1px solid #ddd;">
+UTR
+</th>
+
+<th style="padding:12px;border:1px solid #ddd;">
+Amount
+</th>
+
+<th style="padding:12px;border:1px solid #ddd;">
+Position
+</th>
+
+<th style="padding:12px;border:1px solid #ddd;">
+Status
+</th>
+
+</tr>
+
+</thead>
+
+<tbody id="approvedTableBody">
+
+</tbody>
+
+</table>
+
+</div>
+
+`
+
+const tableBody =
+document.getElementById(
+'approvedTableBody'
+)
+
+if(allData.length === 0){
+
+tableBody.innerHTML = `
+
+<tr>
+
+<td colspan="7"
+style="
+padding:15px;
+text-align:center;
+">
+
+No Approved Records Found
+
+</td>
+
+</tr>
+
+`
+
+}
+
+/* =========================
+ADD ROWS
+========================= */
+
+for(let item of allData){
+
+tableBody.innerHTML += `
+
+<tr>
+
+<td style="
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+">
+
+${item.transaction_type}
+
+</td>
+
+<td style="
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+">
+
+${item.name || ''}
+
+</td>
+
+<td style="
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+">
+
+${item.mobile || ''}
+
+</td>
+
+<td style="
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+">
+
+${item.utr_number || ''}
+
+</td>
+
+<td style="
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+">
+
+₹${item.amount || ''}
+
+</td>
+
+<td style="
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+">
+
+${item.position || ''}
+
+</td>
+
+<td style="
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+color:green;
+font-weight:bold;
+">
+
+Approved
+
+</td>
+
+</tr>
+
+`
+
+}
+
+document.getElementById(
+'loader'
+).style.display='none'
+
+}
+
+
+/* =========================
+UPDATE MEMBERSHIP STATUS
+========================= */
+
+window.updateMembershipStatus =
+async function(id, status){
+
+let confirmMsg = status
+? 'Approve this payment?'
+: 'Reject this payment?'
+
+if(!confirm(confirmMsg)) return
+
+const { error } = await supabase
+
+.from('membership_registration')
+
+.update({
+payment_status: status
+})
+
+.eq('id', id)
+
+if(error){
+
+alert(error.message)
+
+}else{
+
+alert('Status Updated Successfully')
+
+loadMembership()
+
+}
+
+}
+
+/* =========================
+UPDATE DONATION STATUS
+========================= */
+
+window.updateDonationStatus =
+async function(id, status){
+
+let confirmMsg = status
+? 'Approve this donation?'
+: 'Reject this donation?'
+
+if(!confirm(confirmMsg)) return
+
+const { error } = await supabase
+
+.from('donation')
+
+.update({
+payment_status: status
+})
+
+.eq('id', id)
+
+if(error){
+
+alert(error.message)
+
+}else{
+
+alert('Donation Status Updated Successfully')
+
+loadDonation()
+
+}
+
+}
+
+/* =========================
+DEFAULT LOAD
+========================= */
+
+loadMembership()
+
+
+window.loadReports = async function(){
+
+document.getElementById('pageTitle').innerHTML =
+'Active Reports'
+
+document.getElementById('reportFilters').style.display =
+'flex'
+
+document.getElementById('mobileCards').innerHTML=''
+
+document.getElementById('loader').style.display =
+'none'
+
+}
+
+function exportJsonToExcel(rows, fileName, sheetName){
+    if(typeof XLSX === 'undefined'){
+        alert('Excel library is not loaded. Please refresh the page and try again.');
+        return;
+    }
+    if(!rows || rows.length === 0){
+        alert('No records available. Please load the report first.');
+        return;
+    }
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+    XLSX.writeFile(workbook, fileName);
+}
+
+window.exportMembershipExcel = function(){
+    exportJsonToExcel(window.membershipExcelData, 'Membership_Report.xlsx', 'Membership');
+}
+
+window.exportDonationExcel = function(){
+    exportJsonToExcel(window.donationExcelData, 'Donation_Report.xlsx', 'Donation');
+}
+
+window.exportApprovedExcel = function(){
+    exportJsonToExcel(window.approvedExcelData, 'Approved_Report.xlsx', 'Approved');
+}
+
+window.exportReportsToExcel = function(){
+
+const table = document.getElementById('reportsExportTable');
+
+if(!table || !table.querySelector('tbody tr')){
+    alert('Please search reports first.');
+    return;
+}
+
+if(typeof XLSX === 'undefined'){
+    alert('Excel library is not loaded. Please refresh the page and try again.');
+    return;
+}
+
+const workbook = XLSX.utils.table_to_book(table, { sheet: 'Reports' });
+XLSX.writeFile(workbook, 'Active_Reports.xlsx');
+
+}
+
+window.searchReports = async function(){
+
+document.getElementById('mobileCards').innerHTML = `
+<div class="spinner"></div>
+<h3 style="text-align:center;color:#ff7a00;">
+Loading Report...
+</h3>
+`
+
+let rowNo = 0
+
+const type =
+document.getElementById('filterType').value
+
+const district =
+document.getElementById('districtFilter').value
+
+const company =
+document.getElementById('companyFilter').value
+
+const position =
+document.getElementById('positionFilter').value
+
+const fromDate =
+document.getElementById('fromDate').value
+
+const toDate =
+document.getElementById('toDate').value
+
+let html = `
+
+<div style="
+overflow-x:auto;
+background:white;
+border-radius:12px;
+padding:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+">
+
+<table id="reportsExportTable" style="
+width:100%;
+border-collapse:collapse;
+min-width:1200px;
+">
+
+<thead>
+
+<tr style="
+background:#ff7a00;
+color:white;
+">
+
+<th>ID</th>
+<th>Type</th>
+<th>Name</th>
+<th>Mobile</th>
+<th>District</th>
+<th>Company</th>
+<th>Position</th>
+<th>UTR</th>
+<th>Amount</th>
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+`
+
+if(type==='' || type==='membership'){
+
+let query = supabase
+.from('membership_registration')
+.select('*')
+.eq('payment_status',true)
+
+if(district)
+query=query.ilike('district',
+`%${district}%`)
+
+if(company)
+query=query.ilike('company_name',
+`%${company}%`)
+
+if(position)
+query=query.ilike('position',
+`%${position}%`)
+
+if(fromDate)
+query=query.gte('created_at',fromDate)
+
+if(toDate)
+query=query.lte('created_at',
+toDate+' 23:59:59')
+
+const {data}=await query.order('id',{ascending:false})
+
+data.forEach(item=>{
+
+html += `
+
+<tr>
+
+<td>${++rowNo}</td>
+
+<td>Membership</td>
+
+<td>${item.name||''}</td>
+
+<td>${item.mobile||''}</td>
+
+<td>${item.district||''}</td>
+
+<td>${item.company_name||''}</td>
+
+<td>${item.position||''}</td>
+
+<td>${item.utr_number||''}</td>
+
+<td>₹${item.membership_fee||0}</td>
+
+<td>${item.created_at ?
+item.created_at.substring(0,10) : ''}</td>
+
+</tr>
+
+`
+
+})
+
+}
+
+if(type==='' || type==='donation'){
+
+let query = supabase
+.from('donation')
+.select('*')
+.eq('payment_status',true)
+
+if(position)
+query=query.ilike('position',
+`%${position}%`)
+
+if(fromDate)
+query=query.gte('created_at',fromDate)
+
+if(toDate)
+query=query.lte('created_at',
+toDate+' 23:59:59')
+
+const {data}=await query.order('id',{ascending:false})
+
+data.forEach(item=>{
+
+html += `
+
+<tr>
+
+<td>${++rowNo}</td>
+
+<td>Donation</td>
+
+<td>${item.name||''}</td>
+
+<td>${item.mobile||''}</td>
+
+<td>-</td>
+
+<td>-</td>
+
+<td>${item.position||''}</td>
+
+<td>${item.utr_number||''}</td>
+
+<td>₹${item.final_amount||0}</td>
+
+<td>${item.created_at ?
+item.created_at.substring(0,10) : ''}</td>
+
+</tr>
+
+`
+
+})
+
+}
+
+html += `
+
+</tbody>
+
+</table>
+
+</div>
+
+`
+
+document.getElementById(
+'mobileCards'
+).innerHTML = html
+
+}
+
+</script>
+
+</body>
+</html>
